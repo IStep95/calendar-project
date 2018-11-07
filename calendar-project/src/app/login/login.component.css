@@ -1,0 +1,66 @@
+/* LoginComponent's private CSS styles */
+
+  h1 {
+    font-size: 3.2em;
+    color: #039be5;
+    margin-bottom: 0;
+  }
+  h2 {
+    font-size: 2em;
+    margin-top: 0;
+    color: #999;
+    padding-top: 0;
+  }
+
+  hr {
+      border-color: #039be5;
+  }
+
+  #calendarTitle {
+    text-align: center;
+  }
+  #loginBtn {
+    float: left;
+  }
+  #registerBtn {
+    margin-left: 2%;
+  }
+
+  #schedullingIconsContainer {
+    height: 100px;
+  }
+
+  #incorrectInputContainer {
+    margin-top: 2%;
+  }
+
+  .is-invalid {
+      border: 1px solid, #dc3545;
+  }
+  /* Button danger color = #dc3545 */
+  .invalid-response {
+      color: #dc3545; 
+  }
+
+  .vertical-align {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one 🙂       */
+    display: flex;
+    align-items: center;
+  }
+
+  .topPadding {
+      margin-top: 5%;
+  }
+
+  .schedulling-icons {
+      height: 50px;
+  }
+
+  /* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
+    .schedulling-icons {
+        height: 30px;
+        width: 33%;;
+    }
+}

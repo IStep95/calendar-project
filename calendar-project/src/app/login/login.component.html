@@ -1,0 +1,42 @@
+
+<div class="topPadding"> </div>
+  <div class="container">
+    <div>
+        <h1 id="calendarTitle">{{ title }}</h1>
+        <p>{{ currentUser.first_name }}</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h2>Login</h2>
+            <form (ngSubmit)="onLogin()">
+              <div class="form-group">
+                <label>User email</label>
+                <input [(ngModel)]="currentUser.email" name="email" type="text" class="form-control" 
+                       [ngClass]="{ 'is-invalid': submitted && (currentUser.email.length == 0) }"    />
+                <div *ngIf="submitted && (currentUser.email.length == 0)" class="invalid-response">User email is required.</div>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input [(ngModel)]="currentUser.entered_password" type="password" name="entered_password" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && (currentUser.entered_password.length == 0) }"  />
+                <div *ngIf="submitted && (currentUser.entered_password.length == 0)" class="invalid-response">User password is required.</div>
+              </div>
+              <button (focusout)="onLoginFocusOut()" id="loginBtn" class="btn btn-primary">Login</button>
+              <button id="registerBtn" routerLink="/register" class="btn btn-secondary">Register</button>
+            </form>
+
+            <div id="incorrectInputContainer" class="alert alert-danger">Username or password is incorrect!</div>
+
+            <hr />
+            
+            <div id="schedullingIconsContainer" class="row">
+                <img src="../assets/images/calendar_clock_icon.svg" class="col-xs-4 col-md-4 col-sm-4 schedulling-icons" />
+                <img src="../assets/images/todo_list_icon.svg" class="col-xs-4 col-md-4 col-sm-4 schedulling-icons" />
+                <img src="../assets/images/pencil_icon.svg" class="col-xs-4 col-md-4 col-sm-4 schedulling-icons" />
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
