@@ -10,23 +10,30 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using calendarAPI.Models;
 
 namespace calendarAPI
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+			_dBConnectionString = Configuration.GetConnectionString("CalendarDatabase");
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
+
+		private static string _dBConnectionString;
+		public static string DBConnectionString { get { return _dBConnectionString; } }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-        }
+			services.AddDbContext<Calendar_DBContext>(options => options.UseSqlServer(DBConnectionString));
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
