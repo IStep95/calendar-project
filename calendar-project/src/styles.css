@@ -1,1 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+#calendarTitle {
+    text-align: center;
+}
+
+  h1 {
+    font-size: 3.2em;
+    color: #039be5;
+    margin-bottom: 0;
+  }
+  h2 {
+    font-size: 2em;
+    margin-top: 0;
+    color: #999;
+    padding-top: 0;
+  }
+
+  hr {
+      border-color: #039be5;
+  }
+
+  .topPadding {
+    margin-top: 4%;
+  }

@@ -1,3 +1,70 @@
-<p>
-  register works!
-</p>
+<div class="topPadding">
+    <div class="container">
+        <!-- In progress-->
+        <div class="row">
+            <div class="col-md-2 side-divs-visibility"></div>
+            <div class="col-md-2 side-divs-inner-visibility">
+              <button class="btn btn-default back-button" routerLink="/login"><i class="fa fa-arrow-left"></i></button>
+            </div>
+            <div class="col-md-4">
+                <h1 id="calendarTitle">{{ title }}</h1>
+            </div>
+            <div class="col-md-2 side-divs-inner-visibility"></div>
+            <div class="col-md-2 side-divs-visibility"></div>
+        </div>
+      
+        <div class="row">
+            <div class="col-md-2 side-divs-visibility"></div>
+            <div class="col-md-8">
+                <h2>Registration</h2>
+                <form (ngSubmit)="onRegister()">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input [(ngModel)]="currentUser.email" placeholder="email" name="email" type="email" class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && (currentUser.email.length == 0) }"    />
+                        <div *ngIf="submitted && (currentUser.email.length == 0)" class="invalid-response">User email is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input [(ngModel)]="currentUser.entered_password" placeholder="password" name="entered_password" type="password" class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && (currentUser.entered_password.length == 0) }"    />
+                        <div *ngIf="submitted && (currentUser.entered_password.length == 0)" class="invalid-response">User password is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Repetead Password</label>
+                        <input name="repetead_password" type="password" placeholder="repetead password" class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && (repeteadPassword.length == 0) }"    />
+                        <div *ngIf="submitted && (repeteadPassword.length == 0)" class="invalid-response">Repetead password is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>First name</label>
+                        <input [(ngModel)]="currentUser.first_name" name="first_name" placeholder="optional" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Last name</label>
+                        <input [(ngModel)]="currentUser.last_name" name="last_name" placeholder="optional" type="text" class="form-control" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date of birth</label>
+                        <input [(ngModel)]="currentUser.Date" name="date" placeholder="optional" type="date" class="form-control" />
+                    </div>
+                    <button id="registerBtn" class="btn btn-primary">Register me</button>
+                </form>
+                
+                <hr />
+                
+                <div id="schedullingIconsContainer" class="row">
+                    <img src="../assets/images/calendar_clock_icon.svg" class="col-xs-4 col-md-4 col-sm-4 schedulling-icons" />
+                    <img src="../assets/images/todo_list_icon.svg" class="col-xs-4 col-md-4 col-sm-4 schedulling-icons" />
+                    <img src="../assets/images/pencil_icon.svg" class="col-xs-4 col-md-4 col-sm-4 schedulling-icons" />
+                </div>
+
+            </div>
+            <div class="col-md-2 side-divs-visibility"></div>
+        </div>
+    </div>
+</div>

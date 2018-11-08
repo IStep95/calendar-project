@@ -12,8 +12,8 @@ export class LoginComponent implements OnInit {
   title: string = 'Calendar';
   currentUser: User = new User();
   submitted: boolean = false;
-  userEmailRequired: boolean = false;
-  userPasswordRequired: boolean = false;
+  emailOrPasswordIncorrect: boolean = false;
+
 
   constructor() { }
 
@@ -23,16 +23,10 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     this.submitted = true;
-
-    if (StringHandler.IsNullOrEmpty(this.currentUser.email)) {
-      this.userEmailRequired = true;
     
-    }
 
-    if (StringHandler.IsNullOrEmpty(this.currentUser.entered_password)) {
-      this.userPasswordRequired = true;
-    }
-    
+    /* TODO check email and password combination */
+    /* Email validation */
     console.log("Login");
 
   }
@@ -44,11 +38,9 @@ export class LoginComponent implements OnInit {
   private initProperties() {
     this.currentUser = new User();
     this.submitted = false;
+    this.emailOrPasswordIncorrect = false;
     this.currentUser.email = '';
     this.currentUser.entered_password = '';
   }
-
-  private stringIsNullOrEmpty(str: string): boolean{
-    return (!str || 0 === str.length);
-  }
+  
 }

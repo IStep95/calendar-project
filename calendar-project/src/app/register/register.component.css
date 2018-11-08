@@ -1,0 +1,71 @@
+
+#schedullingIconsContainer {
+    height: 100px;
+}
+
+#backBtn {
+    background-color: transparent;
+}
+
+#backBtnArrow {
+    color: #039be5;
+}
+
+.vertical-align-back-button {
+    min-height: 100%;
+    margin: 2%;
+    display: flex;
+    align-items: center;
+  }
+
+.back-button {
+    margin: 10%;
+}
+
+.side-divs-visibility {
+    visibility: hidden;
+}
+
+ /* Button danger color = #dc3545 */
+ .invalid-response {
+    color: #dc3545; 
+}
+
+@media (min-width: 767px) {
+    .side-divs-visibility {
+        visibility: visible;
+    }
+}
+
+@media (min-width: 770px) {
+    .side-divs-inner-visibility{
+        visibility: visible;
+    }
+}
+@media (max-width: 770px) {
+    .side-divs-inner-visibility {
+        visibility: hidden;
+        height: 0px;
+    }
+}
+
+@media (min-width: 770px) {
+    .back-button {
+        visibility: visible;
+    }
+    .back-button::after {
+        content: ' Login';
+    }
+}
+
+.schedulling-icons {
+    height: 50px;
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
+    .schedulling-icons {
+        height: 30px;
+        width: 33%;;
+    }
+}

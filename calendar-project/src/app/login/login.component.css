@@ -1,24 +1,5 @@
-/* LoginComponent's private CSS styles */
-
-  h1 {
-    font-size: 3.2em;
-    color: #039be5;
-    margin-bottom: 0;
-  }
-  h2 {
-    font-size: 2em;
-    margin-top: 0;
-    color: #999;
-    padding-top: 0;
-  }
-
-  hr {
-      border-color: #039be5;
-  }
-
-  #calendarTitle {
-    text-align: center;
-  }
+  /* LoginComponent's private CSS styles */
+  
   #loginBtn {
     float: left;
   }
@@ -49,18 +30,14 @@
     align-items: center;
   }
 
-  .topPadding {
-      margin-top: 5%;
-  }
-
   .schedulling-icons {
       height: 50px;
   }
 
   /* Landscape phone to portrait tablet */
-@media (max-width: 767px) { 
+  @media (max-width: 767px) { 
     .schedulling-icons {
         height: 30px;
         width: 33%;;
     }
-}
+  }
