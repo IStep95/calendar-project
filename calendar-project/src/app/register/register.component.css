@@ -11,6 +11,10 @@
     color: #039be5;
 }
 
+#incorrectInputContainer {
+    margin-top: 2%;
+  }
+
 .vertical-align-back-button {
     min-height: 100%;
     margin: 2%;

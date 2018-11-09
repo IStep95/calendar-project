@@ -23,10 +23,15 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     this.submitted = true;
-    
+    var notValidEmail: boolean = false;
 
     /* TODO check email and password combination */
     /* Email validation */
+    if (!StringHandler.ValidateEmail(this.currentUser.Email)) notValidEmail = true;
+    
+
+
+
     console.log("Login");
 
   }
@@ -39,8 +44,8 @@ export class LoginComponent implements OnInit {
     this.currentUser = new User();
     this.submitted = false;
     this.emailOrPasswordIncorrect = false;
-    this.currentUser.email = '';
-    this.currentUser.entered_password = '';
+    this.currentUser.Email = '';
+    this.currentUser.EnteredPassword = '';
   }
   
 }

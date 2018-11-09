@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using calendarAPI.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace calendarAPI
 {
@@ -31,8 +32,17 @@ namespace calendarAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			services.AddCors();
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+					.AddSessionStateTempDataProvider();
+			services.AddSession();
+
 			services.AddDbContext<Calendar_DBContext>(options => options.UseSqlServer(DBConnectionString));
+			//services.Configure<CookiePolicyOptions>(options =>
+			//{
+			//	options.CheckConsentNeeded = context => false;
+			//	options.MinimumSameSitePolicy = SameSiteMode.None;
+			//});
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,8 +57,17 @@ namespace calendarAPI
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+			// Shows UseCors with CorsPolicyBuilder.
+			app.UseCors(builder =>
+			   builder.WithOrigins("http://localhost:4200")
+			            .AllowAnyHeader()
+			            .AllowAnyMethod()
+			            .AllowAnyOrigin());
+
+			app.UseHttpsRedirection();
+
+			app.UseSession();
+			app.UseMvc();
         }
     }
 }

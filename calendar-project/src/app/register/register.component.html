@@ -20,41 +20,43 @@
                 <form (ngSubmit)="onRegister()">
                     <div class="form-group">
                         <label>Email</label>
-                        <input [(ngModel)]="currentUser.email" placeholder="email" name="email" type="email" class="form-control" 
-                               [ngClass]="{ 'is-invalid': submitted && (currentUser.email.length == 0) }"    />
-                        <div *ngIf="submitted && (currentUser.email.length == 0)" class="invalid-response">User email is required.</div>
+                        <input [(ngModel)]="currentUser.Email" placeholder="email" name="Email" type="email" class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && (currentUser.Email.length == 0) }"    />
+                        <div *ngIf="submitted && (currentUser.Email.length == 0)" class="invalid-response">User email is required.</div>
                     </div>
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input [(ngModel)]="currentUser.entered_password" placeholder="password" name="entered_password" type="password" class="form-control" 
-                               [ngClass]="{ 'is-invalid': submitted && (currentUser.entered_password.length == 0) }"    />
-                        <div *ngIf="submitted && (currentUser.entered_password.length == 0)" class="invalid-response">User password is required.</div>
+                        <input [(ngModel)]="currentUser.EnteredPassword" placeholder="password" name="EnteredPassword" type="password" class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && (currentUser.EnteredPassword.length == 0) }"    />
+                        <div *ngIf="submitted && (currentUser.EnteredPassword.length == 0)" class="invalid-response">User password is required.</div>
                     </div>
 
                     <div class="form-group">
                         <label>Repetead Password</label>
-                        <input name="repetead_password" type="password" placeholder="repetead password" class="form-control" 
-                               [ngClass]="{ 'is-invalid': submitted && (repeteadPassword.length == 0) }"    />
-                        <div *ngIf="submitted && (repeteadPassword.length == 0)" class="invalid-response">Repetead password is required.</div>
+                        <input [(ngModel)]="currentUser.RepeteadPassword" name="RepeteadPassword" type="password" placeholder="repetead password" class="form-control" 
+                               [ngClass]="{ 'is-invalid': submitted && (currentUser.RepeteadPassword.length == 0) }"    />
+                        <div *ngIf="submitted && (currentUser.RepeteadPassword.length == 0)" class="invalid-response">Repetead password is required.</div>
                     </div>
 
                     <div class="form-group">
                         <label>First name</label>
-                        <input [(ngModel)]="currentUser.first_name" name="first_name" placeholder="optional" type="text" class="form-control" />
+                        <input [(ngModel)]="currentUser.FirstName" name="FirstName" placeholder="optional" type="text" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Last name</label>
-                        <input [(ngModel)]="currentUser.last_name" name="last_name" placeholder="optional" type="text" class="form-control" />
+                        <input [(ngModel)]="currentUser.LastName" name="LastName" placeholder="optional" type="text" class="form-control" />
                     </div>
                     
                     <div class="form-group">
                         <label>Date of birth</label>
-                        <input [(ngModel)]="currentUser.Date" name="date" placeholder="optional" type="date" class="form-control" />
+                        <input [(ngModel)]="currentUser.DateOfBirth" name="DateOfBirth" placeholder="optional" type="date" class="form-control" />
                     </div>
                     <button id="registerBtn" class="btn btn-primary">Register me</button>
                 </form>
                 
+                <div *ngIf="registratitonFailed" id="incorrectInputContainer" class="alert alert-danger">{{ RegistrationFailedMessage }}</div>
+
                 <hr />
                 
                 <div id="schedullingIconsContainer" class="row">

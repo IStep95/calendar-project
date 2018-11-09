@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using calendarAPI.DTObjects;
 using calendarAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +16,11 @@ namespace calendarAPI.Controllers
 		[HttpGet]
 		public ActionResult<IEnumerable<string>> Get()
 		{
-			return new string[] { "Users" };
+			return new string[] { "Calendar API", "Users" };
 		}
 
-		// GET api/users/5
-		[HttpGet("{id}")]
+		// GET api/users/get/5
+		[HttpGet("Get/{id}")]
 		public ActionResult<Users> Get(int id)
 		{
 			Users user;
@@ -28,10 +31,58 @@ namespace calendarAPI.Controllers
 			return user;
 		}
 
-		// POST api/users
-		[HttpPost]
-		public void Post([FromBody] string value)
+		[HttpGet("Proba")]
+		public ActionResult<string> Proba()
 		{
+			return "mora radit";
+		}
+
+		[HttpPost("Authenticate")]
+		public ActionResult<Users> Authenticate(LoginInfo value)
+		{
+			Users user = null;
+			using (var db = new Calendar_DBContext())
+			{
+				foreach(Users entity in db.Users)
+				{
+					if (entity.Email == value.Email)
+					{
+						user = entity;
+					}
+				}
+				if (user == null) return BadRequest("User with entered email does not exist.");
+				if (user.PasswordHash != value.PasswordHash) return BadRequest("Wrong password.");
+
+				user.SessionId = this.HttpContext.Session.Id;
+				db.Users.Update(user);
+				db.SaveChanges();
+			}
+			return Ok(user);
+		}
+
+		// POST api/users/create
+		[HttpPost("Create")]
+		public ActionResult<UsersDTO> Create(UsersDTO userDTO)
+		{
+			using (var db = new Calendar_DBContext())
+			{
+				try
+				{
+
+					Users user = convertUserDTOToUser(userDTO);
+					user.PasswordHash = computePasswordHash(userDTO.EnteredPassword);
+					user.SessionId = this.HttpContext.Session.Id;
+					userDTO.SessionId = user.SessionId;
+
+					db.Add(user);
+					db.SaveChanges();
+				}
+				catch (Exception ex)
+				{
+					return BadRequest("User already exists with same email.");
+				}
+			}
+			return Ok(userDTO);
 		}
 
 		// PUT api/users/5
@@ -44,6 +95,24 @@ namespace calendarAPI.Controllers
 		[HttpDelete("{id}")]
 		public void Delete(int id)
 		{
+		}
+
+		private string computePasswordHash(string password)
+		{
+			var sha1 = new SHA1CryptoServiceProvider();
+			var sha1data = sha1.ComputeHash(System.Text.Encoding.Default.GetBytes(password));
+			return  System.Text.Encoding.Default.GetString(sha1data);
+		}
+
+		private Users convertUserDTOToUser(UsersDTO userDTO)
+		{
+			Users user = new Users();
+			user.Email = userDTO.Email;
+			user.FirstName = userDTO.FirstName;
+			user.LastName = userDTO.LastName;
+			user.DateOfBirth = userDTO.DateOfBirth;
+
+			return user;
 		}
 	}
 }

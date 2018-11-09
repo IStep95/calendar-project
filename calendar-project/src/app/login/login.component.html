@@ -14,15 +14,15 @@
             <form (ngSubmit)="onLogin()">
               <div class="form-group">
                 <label>User email</label>
-                <input [(ngModel)]="currentUser.email" name="email" type="email" class="form-control" 
-                       [ngClass]="{ 'is-invalid': submitted && (currentUser.email.length == 0) }"    />
-                <div *ngIf="submitted && (currentUser.email.length == 0)" class="invalid-response">User email is required.</div>
+                <input [(ngModel)]="currentUser.Email" name="Email" type="email" class="form-control" 
+                       [ngClass]="{ 'is-invalid': submitted && (currentUser.Email.length == 0) }"    />
+                <div *ngIf="submitted && (currentUser.Email.length == 0)" class="invalid-response">User email is required.</div>
               </div>
               <div class="form-group">
                 <label>Password</label>
-                <input [(ngModel)]="currentUser.entered_password" type="password" name="entered_password" class="form-control"
-                       [ngClass]="{ 'is-invalid': submitted && (currentUser.entered_password.length == 0) }"  />
-                <div *ngIf="submitted && (currentUser.entered_password.length == 0)" class="invalid-response">User password is required.</div>
+                <input [(ngModel)]="currentUser.EnteredPassword" type="password" name="EnteredPassword" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && (currentUser.EnteredPassword.length == 0) }"  />
+                <div *ngIf="submitted && (currentUser.EnteredPassword.length == 0)" class="invalid-response">User password is required.</div>
               </div>
               <button (focusout)="onLoginFocusOut()" id="loginBtn" class="btn btn-primary">Login</button>
               <button id="registerBtn" routerLink="/register" class="btn btn-secondary">Register</button>

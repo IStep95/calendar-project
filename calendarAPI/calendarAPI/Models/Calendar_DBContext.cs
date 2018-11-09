@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+
 namespace calendarAPI.Models
 {
     public partial class Calendar_DBContext : DbContext
@@ -21,7 +22,8 @@ namespace calendarAPI.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-				optionsBuilder.UseSqlServer(calendarAPI.Startup.DBConnectionString);
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=tcp:calendardb.database.windows.net,1433;Initial Catalog=Calendar_DB;Persist Security Info=False;User ID=istep;Password=2345Sedam;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
