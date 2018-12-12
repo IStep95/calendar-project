@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
 
 import { RegistrationService } from '../registration.service';
-import { User } from '../Model/User';
+import { Users } from "../Model/Users";
 import { StringHandler } from '../Helpers/StringHandler';
 import { HelperHandler } from '../Helpers/HelperHandler';
+import { Constants } from '../Constants';
+
 
 @Component({
   selector: 'app-register',
@@ -13,12 +17,13 @@ import { HelperHandler } from '../Helpers/HelperHandler';
 export class RegisterComponent implements OnInit {
 
   title: string = 'Calendar';
-  currentUser: User = new User();
+  currentUser: Users = new Users();
   submitted: boolean = false;
   registratitonFailed: boolean = false;
   RegistrationFailedMessage: string;
 
-  constructor(private registrationService:RegistrationService) { }
+  constructor(private registrationService: RegistrationService, private router: Router) { 
+  }
 
   ngOnInit() {
     this.initProperties();
@@ -26,40 +31,45 @@ export class RegisterComponent implements OnInit {
 
   onRegister() {
       /* Correct get example */
-      /*
-        var x = this.registrationService.getUserById(1).subscribe(
-        data => { currentUser = data},
-        err => console.error(err),
-        () => 
-        { 
-            console.log('done loading user');
-            console.log(currentUser.email);
-        }
-        );*/
+    
     this.submitted = true;
 
+
     if (!this.correctInputForm()) return;
+    
     this.registrationService
         .registerUser(this.currentUser)
         .subscribe(
-          data => { this.currentUser = data},
+          (data: Users) => {
+            this.currentUser.UserId = data['userId'];
+            this.currentUser.SessionId = data['sessionId'];
+          },
           err => 
           { this.registratitonFailed = true;
-            this.RegistrationFailedMessage = err.error;
+            if (err.status != 400) {
+              this.RegistrationFailedMessage = err.error;
+            } else {
+              this.RegistrationFailedMessage = "Invalid input."
+            }
           },
           () => 
-          { 
-              console.log('done creating user');
+          {
               HelperHandler.PrintUser(this.currentUser);
+              this.registrationService.userAuthenticated(this.currentUser);    
+              this.router.navigate(['/calendar']);
           }
-        )
+        );
 
-    //console.log("Add loader..");
-    console.log("Registriram");
+    //console.log("Add progress bar..");
+    console.log("Registering...");
   }
 
   private initProperties() {
-    this.currentUser = new User();
+    this.initUser();
+  }
+
+  private initUser() {
+    this.currentUser = new Users();
     this.submitted = false;
     this.currentUser.FirstName = '';
     this.currentUser.LastName = '';
@@ -77,7 +87,7 @@ export class RegisterComponent implements OnInit {
       return false;
     }
     
-    if (this.currentUser.EnteredPassword.length <= 8) {
+    if (this.currentUser.EnteredPassword.length < Constants.MIN_PASSWORD_LENGTH) {
       this.registratitonFailed = true;
       this.RegistrationFailedMessage = "Password must be at least 8 characters long.";
       return false;

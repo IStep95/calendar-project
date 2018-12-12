@@ -1,7 +1,7 @@
-import { User } from '../Model/User';
+import { Users } from "../Model/Users";
 
 export class HelperHandler {
-    public static PrintUser(user: User): void
+    public static PrintUser(user: Users): void
     {
         console.log(user.UserId);
         console.log(user.Email);

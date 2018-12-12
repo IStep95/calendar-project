@@ -28,7 +28,7 @@
               <button id="registerBtn" routerLink="/register" class="btn btn-secondary">Register</button>
             </form>
 
-            <div *ngIf="emailOrPasswordIncorrect" id="incorrectInputContainer" class="alert alert-danger">Username or password is incorrect!</div>
+            <div *ngIf="emailOrPasswordIncorrect" id="incorrectInputContainer" class="alert alert-danger">{{ LoginFailedMessage }}</div>
 
             <hr />
             

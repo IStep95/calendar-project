@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { User } from './Model/User';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { Users } from "./Model/Users";
 import { Constants } from './Constants';
+import { AuthenticationService } from './authentication.service';
+
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Accept': 'application/json', 'Content-Type': 'application/json' })
@@ -14,23 +16,23 @@ const httpOptions = {
 
 export class RegistrationService {
 
-  vuser:User;
-  
   constructor(
-      private http: HttpClient   
+      private http: HttpClient,
+      private authenticationService: AuthenticationService   
   ) { }
 
-  getUserById(id: number) :Observable<User> {
+  getUserById(id: number): Observable<Users> {
     var url = Constants.API_ENDPOINT + "/Get/" + id;
-    var currUser: Observable<User> = new Observable<User>();
-    //return this.http.get<User>(url).subscribe((data: User) => currUser = of(data));
-    
-    return this.http.get<User>(url);
+    var currUser: Observable<Users> = new Observable<Users>();
+    return this.http.get<Users>(url);
   } 
  
-  registerUser(regUser: User): Observable<User> {
-    
+  registerUser(regUser: Users): Observable<Users>{
     var url = Constants.API_ENDPOINT + "/Create";
-    return this.http.post<User>(url, regUser, httpOptions);
+    return this.http.post<Users>(url, regUser, httpOptions);
   }
+
+  userAuthenticated(authUser: Users): void {
+    this.authenticationService.userAuthenticated(authUser);
+  } 
 }
