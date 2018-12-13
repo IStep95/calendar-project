@@ -23,13 +23,10 @@ import {
 } from 'date-fns';
 
 import { Subject } from 'rxjs';
-
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
-  CalendarView
-} from 'angular-calendar';
+import { CalendarEvent,
+         CalendarEventAction,
+         CalendarEventTimesChangedEvent,
+         CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
 //#endregion
 
 const colors: any = {
