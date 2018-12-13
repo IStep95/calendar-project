@@ -1,10 +1,107 @@
+<link href="https://unpkg.com/bootstrap-css-only@4.1.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.css" rel="stylesheet">
+<link href="https://unpkg.com/angular-calendar@0.26.4/css/angular-calendar.css" rel="stylesheet">
+<link href="https://unpkg.com/flatpickr@4.5.2/dist/flatpickr.css" rel="stylesheet">
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Naslov modal</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Probni modal</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+  </div>
+</ng-template>
+
 <div class="topPadding">
   <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>{{ title }}</h1>
+            <div class="row">
+                <div class="col-md-2 side-divs-visibility"></div>
+                <div class="col-md-2 side-divs-inner-visibility text-center pull-left">
+                  <button class="btn btn-default back-button" routerLink="/login"><i class="fa fa-arrow-left"></i></button>
+                </div>
+                <div class="col-md-4 inner-title-div">
+                    <h1 id="calendarTitle">{{ title }}</h1>
+                </div>
+                <div class="col-md-2 side-divs-inner-visibility"></div>
+                <div class="col-md-2 side-divs-visibility"></div>
+            </div>
             <br />
-            <p>Tu bi trebao doći kalendar za specifičnog usera.</p>
+            <div class="row text-center">
+              <div class="col-md-4">
+                <div class="btn-group pull-left">
+                  <div
+                    class="btn btn-primary"
+                    mwlCalendarPreviousView
+                    [view]="view"
+                    [(viewDate)]="viewDate"
+                    (viewDateChange)="activeDayIsOpen = false">
+                    Previous
+                  </div>
+                  <div
+                    class="btn btn-outline-secondary"
+                    mwlCalendarToday
+                    [(viewDate)]="viewDate">
+                    Today
+                  </div>
+                  <div
+                    class="btn btn-primary"
+                    mwlCalendarNextView
+                    [view]="view"
+                    [(viewDate)]="viewDate"
+                    (viewDateChange)="activeDayIsOpen = false">
+                    Next
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <h2>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h2>
+              </div>
+              <div class="col-md-4">
+                <div class="btn-group pull-right">
+                  <div
+                    class="btn btn-primary"
+                    (click)="view = CalendarView.Month"
+                    [class.active]="view === CalendarView.Month">
+                    Month
+                  </div>
+                  <div
+                    class="btn btn-primary"
+                    (click)="view = CalendarView.Day"
+                    [class.active]="view === CalendarView.Day">
+                    Day
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div [ngSwitch]="view" class="center">
+              <mwl-calendar-month-view
+                *ngSwitchCase="CalendarView.Month"
+                [viewDate]="viewDate"
+                [events]="events"
+                [refresh]="refresh"
+                [activeDayIsOpen]="activeDayIsOpen"
+                (dayClicked)="dayClicked($event.day)"
+                (eventClicked)="handleEvent('Clicked', $event.event)"
+                (eventTimesChanged)="eventTimesChanged($event)">
+              </mwl-calendar-month-view>
+              <mwl-calendar-day-view
+                *ngSwitchCase="CalendarView.Day"
+                [viewDate]="viewDate"
+                [events]="events"
+                [refresh]="refresh"
+                (eventClicked)="handleEvent('Clicked', $event.event)"
+                (eventTimesChanged)="eventTimesChanged($event)">
+              </mwl-calendar-day-view>
+            </div>
         </div>
     </div>
   </div>

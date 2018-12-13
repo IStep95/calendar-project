@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+
 #calendarTitle {
     text-align: center;
 }
@@ -22,3 +23,5 @@
   .topPadding {
     margin-top: 4%;
   }
+  
+  body    {overflow-y:scroll;}

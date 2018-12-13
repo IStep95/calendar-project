@@ -1,0 +1,60 @@
+@import "../../../node_modules/angular-calendar/css/angular-calendar.css";
+
+#navigationBtns {
+    align-content: flex-start;
+}
+
+#calendarTitle {
+    text-align: center;
+}
+
+h1 {
+    font-size: 3.2em;
+    color: #039be5;
+    margin-bottom: 0;
+}
+
+h2 {
+    font-size: 2em;
+    margin-top: 0;
+    color: #999;
+    padding-top: 0;
+}
+
+hr {
+    border-color: #039be5;
+}
+
+.topPadding {
+    margin-top: 4%;
+}
+
+.back-button {
+    background-color: transparent;
+}
+
+.inner-title-div {
+    max-width: 33.333%;
+}
+
+.side-divs-inner-visibility {
+    max-width: 16.667%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media (min-width: 767px) {
+    .side-divs-visibility {
+        visibility: visible;
+    }
+}
+
+@media (min-width: 770px) {
+    .back-button {
+        visibility: visible;
+    }
+    .back-button::after {
+        content: ' Login';
+    }
+}

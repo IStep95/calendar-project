@@ -3,7 +3,7 @@
     height: 100px;
 }
 
-#backBtn {
+.back-button {
     background-color: transparent;
 }
 
@@ -13,17 +13,6 @@
 
 #incorrectInputContainer {
     margin-top: 2%;
-  }
-
-.vertical-align-back-button {
-    min-height: 100%;
-    margin: 2%;
-    display: flex;
-    align-items: center;
-  }
-
-.back-button {
-    margin: 10%;
 }
 
 .side-divs-visibility {
@@ -35,21 +24,20 @@
     color: #dc3545; 
 }
 
+.inner-title-div {
+    max-width: 33.333%;
+}
+
+.side-divs-inner-visibility {
+    max-width: 16.667%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 @media (min-width: 767px) {
     .side-divs-visibility {
         visibility: visible;
-    }
-}
-
-@media (min-width: 770px) {
-    .side-divs-inner-visibility{
-        visibility: visible;
-    }
-}
-@media (max-width: 770px) {
-    .side-divs-inner-visibility {
-        visibility: hidden;
-        height: 0px;
     }
 }
 
