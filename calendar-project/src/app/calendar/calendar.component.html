@@ -36,7 +36,26 @@
             <br />
             <div class="row text-center">
               <div class="col-md-4">
-                <div class="btn-group pull-left">
+                  <div class="btn-group pull-left">
+                    <div
+                      class="btn btn-primary"
+                      (click)="view = CalendarView.Month"
+                      [class.active]="view === CalendarView.Month">
+                      Month
+                    </div>
+                    <div
+                      class="btn btn-primary"
+                      (click)="view = CalendarView.Day"
+                      [class.active]="view === CalendarView.Day">
+                      Day
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <h2 id="viewTitleDesktop">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h2>
+              </div>
+              <div class="col-md-4">
+                <div class="btn-group pull-right">
                   <div
                     class="btn btn-primary"
                     mwlCalendarPreviousView
@@ -62,26 +81,11 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <h2>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h2>
-              </div>
-              <div class="col-md-4">
-                <div class="btn-group pull-right">
-                  <div
-                    class="btn btn-primary"
-                    (click)="view = CalendarView.Month"
-                    [class.active]="view === CalendarView.Month">
-                    Month
-                  </div>
-                  <div
-                    class="btn btn-primary"
-                    (click)="view = CalendarView.Day"
-                    [class.active]="view === CalendarView.Day">
-                    Day
-                  </div>
-                </div>
+                  <h5 id="viewTitleMobile" class="pull-left">{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h5>
               </div>
             </div>
-            <br />
+            <br class="break-view-calendar" />
+            
             <div [ngSwitch]="view" class="center">
               <mwl-calendar-month-view
                 *ngSwitchCase="CalendarView.Month"

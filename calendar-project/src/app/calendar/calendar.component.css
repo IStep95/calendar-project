@@ -21,6 +21,14 @@ h2 {
     padding-top: 0;
 }
 
+h5 {
+    font-size: 1.5em;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #999;
+}
+
+
 hr {
     border-color: #039be5;
 }
@@ -44,9 +52,21 @@ hr {
     align-items: center;
 }
 
-@media (min-width: 767px) {
-    .side-divs-visibility {
+
+@media (max-width: 770px) {
+    #viewTitleDesktop {
+        visibility: hidden;
+        height: 5px;
+    }
+    #viewTitleMobile {
         visibility: visible;
+        
+    }
+    .break-view-calendar {
+        visibility: visible;
+        display: block;
+        line-height: 0px;
+        content: " ";
     }
 }
 
@@ -55,6 +75,19 @@ hr {
         visibility: visible;
     }
     .back-button::after {
-        content: ' Login';
+        content: ' Log out';
+    }
+    #viewTitleDesktop {
+        visibility: visible;
+    }
+    #viewTitleMobile {
+        visibility: hidden;
+    }
+    .break-view-calendar {
+        visibility: visible;
+    }
+    
+    .side-divs-visibility {
+        visibility: visible;
     }
 }
