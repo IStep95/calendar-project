@@ -38,7 +38,7 @@ namespace calendarAPI.Controllers
 		}
 
 		[HttpPost("Authenticate")]
-		public ActionResult<Users> Authenticate(LoginInfo value)
+		public ActionResult<UsersDTO> Authenticate(UsersDTO value)
 		{
 			Users user = null;
 			using (var db = new Calendar_DBContext())
@@ -51,7 +51,7 @@ namespace calendarAPI.Controllers
 					}
 				}
 				if (user == null) return BadRequest("User with entered email does not exist.");
-				if (user.PasswordHash != value.PasswordHash) return BadRequest("Wrong password.");
+				if (user.PasswordHash != computePasswordHash(value.EnteredPassword)) return BadRequest("Wrong password.");
 
 				user.SessionId = this.HttpContext.Session.Id;
 				db.Users.Update(user);
