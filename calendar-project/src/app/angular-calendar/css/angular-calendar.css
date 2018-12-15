@@ -495,6 +495,23 @@
     .mobile-view {
       visibility: visible;
     }
+
+    .cal-day-number {
+      font-size: 0.9em;
+      height: 25px;
+    }
+    
+    .cal-cell-top {
+      min-height: inherit;
+    }
+    .cal-month-view .cal-day-cell{
+      min-height: 50px;
+      height: 50px;
+      width: 50px;
+    }
+    .cal-today {
+      font-size: 0.9em;
+    }
   }
 
   @media(min-width: 770px) {
@@ -505,5 +522,6 @@
       visibility: hidden;
       height: 0px;
     }
+
   }
   

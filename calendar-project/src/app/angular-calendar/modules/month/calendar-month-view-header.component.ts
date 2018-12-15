@@ -24,7 +24,6 @@ import { trackByWeekDayHeaderDate } from '../common/util';
           class="cal-cell"
           *ngFor="let day of days; trackBy: trackByWeekDayHeaderDate"
           [class.cal-past]="day.isPast"
-          [class.cal-today]="day.isToday"
           [class.cal-future]="day.isFuture"
           [class.cal-weekend]="day.isWeekend"
           [ngClass]="day.cssClass"

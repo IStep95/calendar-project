@@ -24,10 +24,8 @@ import { PlacementArray } from 'positioning';
       let-tooltipTemplate="tooltipTemplate"
       let-tooltipAppendToBody="tooltipAppendToBody"
     >
-      <div class="cal-cell-top">
-        <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{
-          day.badgeTotal
-        }}</span>
+      <div class="cal-cell-top cal-cell-top-mob">
+        
         <span class="cal-day-number">{{
           day.date | calendarDate: 'monthViewDayNumber':locale
         }}</span>
@@ -38,21 +36,12 @@ import { PlacementArray } from 'positioning';
           *ngFor="let event of day.events; trackBy: trackByEventId"
           [style.backgroundColor]="event.color?.primary"
           [ngClass]="event?.cssClass"
-          (mouseenter)="highlightDay.emit({ event: event })"
-          (mouseleave)="unhighlightDay.emit({ event: event })"
-          [mwlCalendarTooltip]="
-            event.title | calendarEventTitle: 'monthTooltip':event
-          "
-          [tooltipPlacement]="tooltipPlacement"
-          [tooltipEvent]="event"
-          [tooltipTemplate]="tooltipTemplate"
-          [tooltipAppendToBody]="tooltipAppendToBody"
           mwlDraggable
           [class.cal-draggable]="event.draggable"
           dragActiveClass="cal-drag-active"
           [dropData]="{ event: event, draggedFrom: day }"
           [dragAxis]="{ x: event.draggable, y: event.draggable }"
-          (mwlClick)="eventClicked.emit({ event: event })"
+          
         ></div>
       </div>
     </ng-template>
@@ -84,7 +73,8 @@ import { PlacementArray } from 'positioning';
     '[class.cal-open]': 'day === openDay',
     '[class.cal-event-highlight]': '!!day.backgroundColor',
     '[style.backgroundColor]': 'day.backgroundColor'
-  }
+  },
+  styleUrls: ['../../css/angular-calendar.css']
 })
 export class CalendarMonthCellComponent {
   @Input() day: MonthViewDay;

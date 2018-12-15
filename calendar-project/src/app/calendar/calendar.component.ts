@@ -104,18 +104,6 @@ export class CalendarComponent implements OnInit {
       title: 'A long event that spans 2 months',
       color: colors.blue,
       allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
     }
   ];
   activeDayIsOpen: boolean = true;
