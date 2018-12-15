@@ -26,6 +26,7 @@
               </div>
               <button (focusout)="onLoginFocusOut()" id="loginBtn" class="btn btn-primary">Login</button>
               <button id="registerBtn" routerLink="/register" class="btn btn-secondary">Register</button>
+              <img id="loaderIcon" src="../assets/images/loader.svg" class="pull-right" [ngStyle]="{'visibility': isLoaderIconVisible ? 'visible' : 'hidden'}" />
             </form>
 
             <div *ngIf="emailOrPasswordIncorrect" id="incorrectInputContainer" class="alert alert-danger">{{ LoginFailedMessage }}</div>

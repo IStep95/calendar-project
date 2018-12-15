@@ -5,6 +5,7 @@ import { Users } from "../Model/Users";
 import { StringHandler } from '../Helpers/StringHandler';
 import { LoginService } from '../login.service';
 import { HelperHandler } from '../Helpers/HelperHandler';
+import { Constants } from '../Constants';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit {
   submitted: boolean = false;
   emailOrPasswordIncorrect: boolean = false;
   LoginFailedMessage: string;
+  isLoaderIconVisible: boolean = false;
 
   constructor(private loginService: LoginService,
               private router: Router) { }
@@ -50,9 +52,9 @@ export class LoginComponent implements OnInit {
                       },
                       err => {
                         this.emailOrPasswordIncorrect = true;
-                        if (err.status == 400) {
+                        if (err.status == Constants.BAD_REQUEST) {
                           this.LoginFailedMessage = "User with entered email does not exist.";
-                        } else if(err.status == 401) {
+                        } else if(err.status == Constants.UNAUTHORIZED) {
                           this.LoginFailedMessage = "Entered password is incorrect.";
                         } else {
                           this.LoginFailedMessage = "Oooops something went wrong, try later.";
@@ -61,12 +63,18 @@ export class LoginComponent implements OnInit {
                       () => {
                           HelperHandler.PrintUser(this.currentUser);
                           this.loginService.userAuthenticated(this.currentUser);
-                          this.router.navigate(['/calendar']);
+                          
+                          // Wait one second for better UX
+                          this.sleep(Constants._1000MSEC).then(e => {
+                            this.router.navigate(['/calendar']);
+                          });
                       }
+                      
      );
     
     // Add progress bar...
     console.log("Loging in...");
+    this.isLoaderIconVisible = true;
 
   }
 
@@ -80,6 +88,11 @@ export class LoginComponent implements OnInit {
     this.emailOrPasswordIncorrect = false;
     this.currentUser.Email = '';
     this.currentUser.EnteredPassword = '';
+    this.isLoaderIconVisible = false;
+  }
+
+  private async sleep(msec) {
+    return new Promise(resolve => setTimeout(resolve, msec));
   }
   
 }

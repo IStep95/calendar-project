@@ -58,8 +58,7 @@ export interface CalendarMonthViewEventTimesChangedEvent<
       <mwl-calendar-month-view-header
         [days]="columnHeaders"
         [locale]="locale"
-        [customTemplate]="headerTemplate"
-      >
+        [customTemplate]="headerTemplate">
       </mwl-calendar-month-view-header>
       <div class="cal-days">
         <div *ngFor="let rowIndex of view.rowOffsets; trackByIndex">
@@ -115,7 +114,8 @@ export interface CalendarMonthViewEventTimesChangedEvent<
         </div>
       </div>
     </div>
-  `
+  `,
+  styleUrls: ['../../css/angular-calendar.css']
 })
 export class CalendarMonthViewComponent
   implements OnChanges, OnInit, OnDestroy {

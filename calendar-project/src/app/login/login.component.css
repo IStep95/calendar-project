@@ -34,10 +34,20 @@
       height: 50px;
   }
 
+  #loaderIcon {
+    height: 50px;
+    width: 50px;
+    padding-bottom: 0.375rem;
+  }
+
   /* Landscape phone to portrait tablet */
   @media (max-width: 767px) { 
     .schedulling-icons {
         height: 30px;
         width: 33%;;
+    }
+    #loaderIcon {
+      height: 50px;
+      width: 50px;
     }
   }

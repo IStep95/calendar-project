@@ -1,3 +1,4 @@
+
 .cal-month-view .cal-header {
   text-align: center;
   font-weight: bolder; }
@@ -485,3 +486,24 @@
   height: 0;
   border-color: transparent;
   border-style: solid; }
+
+  @media(max-width: 770px) {
+    .web-view {
+      visibility: hidden;
+      height: 0px;
+    }
+    .mobile-view {
+      visibility: visible;
+    }
+  }
+
+  @media(min-width: 770px) {
+    .web-view {
+      visibility: visible;
+    }
+    .mobile-view {
+      visibility: hidden;
+      height: 0px;
+    }
+  }
+  
