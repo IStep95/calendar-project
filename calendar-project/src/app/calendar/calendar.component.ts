@@ -10,6 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthenticationService } from '../authentication.service';
 import { Users } from '../Model/Users';
+import { Events } from '../Model/Events';
 
 import {
   startOfDay,
@@ -27,6 +28,7 @@ import { CalendarEvent,
          CalendarEventAction,
          CalendarEventTimesChangedEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
+import { CalendarEventActionsComponent } from '../angular-calendar/modules/common/calendar-event-actions.component';
 //#endregion
 
 const colors: any = {
@@ -50,6 +52,7 @@ const colors: any = {
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
+
 export class CalendarComponent implements OnInit {
   //#region Component members
   @ViewChild('modalContent')
@@ -58,6 +61,8 @@ export class CalendarComponent implements OnInit {
   view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
   viewDate: Date = new Date();
+  newEvent: Events = new Events();
+
   modalData: {
     action: string;
     event: CalendarEvent;
@@ -67,6 +72,7 @@ export class CalendarComponent implements OnInit {
       label: '<i class="fa fa-fw fa-pencil"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.handleEvent('Edited', event);
+        //Add edit...
       }
     },
     {
@@ -74,16 +80,18 @@ export class CalendarComponent implements OnInit {
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.events = this.events.filter(iEvent => iEvent !== event);
         this.handleEvent('Deleted', event);
+        //Add delete...
       }
     }
   ];
   refresh: Subject<any> = new Subject();
+
   events: CalendarEvent[] = [
     {
       start: subDays(startOfDay(new Date()), 1),
       end: addDays(new Date(), 1),
       title: 'A 3 day event',
-      color: colors.red,
+      color: colors.yellow,
       actions: this.actions,
       allDay: true,
       resizable: {
@@ -102,8 +110,9 @@ export class CalendarComponent implements OnInit {
       start: subDays(endOfMonth(new Date()), 3),
       end: addDays(endOfMonth(new Date()), 3),
       title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true
+      color: colors.yellow,
+      allDay: true,
+
     }
   ];
   activeDayIsOpen: boolean = true;
@@ -141,6 +150,14 @@ export class CalendarComponent implements OnInit {
       }
   
   ngOnInit() {
+    this.initProperties();
+  }
+
+  initProperties() {
+
+    this.newEvent.Title = '';
+    this.newEvent.StartsAt = new Date();
+    this.newEvent.EndsAt = new Date();
   }
 
   //#region Functions

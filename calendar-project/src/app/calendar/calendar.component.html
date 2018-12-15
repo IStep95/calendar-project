@@ -105,6 +105,40 @@
                 (eventTimesChanged)="eventTimesChanged($event)">
               </mwl-calendar-day-view>
             </div>
+
+            <br><br><br>
+
+            <h3>Add event
+              <button
+                class="btn btn-primary pull-right"
+                (click)="addEvent()">
+                Add
+              </button>
+              <div class="clearfix"></div>
+            </h3>
+
+            <table class="table table-bordered">
+              <tr>
+                <th>Title</th>
+                <td><input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="newEvent.Title">
+                </td>
+              </tr>
+              <tr>
+                <th>Starts at</th>
+                <td>unos...</td>
+              </tr>
+              <tr>
+                <th>Ends at</th>
+                <td>unos..</td>
+              </tr>
+              <tr>
+                <th>Remove</th>
+                <td>Gumb..</td>
+              </tr>
+            </table>
         </div>
     </div>
   </div>
