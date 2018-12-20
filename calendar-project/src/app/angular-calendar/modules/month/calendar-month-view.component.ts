@@ -278,7 +278,6 @@ export class CalendarMonthViewComponent
     private dateAdapter: DateAdapter
   ) {
     this.locale = locale;
-    console.log("Prvo valjda constructor");
     this.firstPass = true;
   }
 
@@ -286,7 +285,6 @@ export class CalendarMonthViewComponent
    * @hidden
    */
   ngOnInit(): void {
-    console.log("Pozvan ngOnInit");
     if (this.refresh) {
       this.refreshSubscription = this.refresh.subscribe(() => {
         this.refreshAll();
@@ -299,7 +297,6 @@ export class CalendarMonthViewComponent
    * @hidden
    */
   ngOnChanges(changes: any): void {
-    console.log("Pozvan ngOnChanges");
     if (changes.viewDate || changes.excludeDays || changes.weekendDays) {
       this.refreshHeader();
     }

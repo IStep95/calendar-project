@@ -11,6 +11,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationService } from '../authentication.service';
 import { Users } from '../Model/Users';
 import { Events } from '../Model/Events';
+import { HelperHandler } from '../Helpers/HelperHandler';
 
 import {
   startOfDay,
@@ -29,6 +30,7 @@ import { CalendarEvent,
          CalendarEventTimesChangedEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
 import { CalendarEventActionsComponent } from '../angular-calendar/modules/common/calendar-event-actions.component';
+import { forEach } from '@angular/router/src/utils/collection';
 //#endregion
 
 const colors: any = {
@@ -62,7 +64,6 @@ export class CalendarComponent implements OnInit {
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   newEvent: Events = new Events();
-  typeText:string;
 
   modalData: {
     action: string;
@@ -87,35 +88,7 @@ export class CalendarComponent implements OnInit {
   ];
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.yellow,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.yellow,
-      allDay: true,
-
-    }
-  ];
+  events: CalendarEvent[] = [];
   activeDayIsOpen: boolean = true;
   authUser: Users = null;
 
@@ -127,13 +100,31 @@ export class CalendarComponent implements OnInit {
             this.router.navigate(['/login']);
         }
         this.authUser = this.authenticationService.getUser();
-        if (this.authUser != null) {
-          this.authenticationService
+        if (this.authUser != null) 
+          this.getAuthUserData();
+      }
+  
+  ngOnInit() {
+    this.initProperties();
+    var retrievedObject = localStorage.getItem('Authenticated user');
+    if (retrievedObject != null) {
+      this.authUser = JSON.parse(retrievedObject);
+      HelperHandler.PrintUser(this.authUser);
+    }
+  }
+
+  initProperties() {
+    this.newEvent.Title = '';
+    this.newEvent.StartsAt = new Date();
+    this.newEvent.EndsAt = new Date();
+  }
+
+  getAuthUserData() {
+    this.authenticationService
               .getUserById(this.authUser.UserId)
               .subscribe(
                 (data: Users) => {
                     if (!(this.authUser.SessionId === data['sessionId'])){
-                      console.log("Incorrect session id.");
                       this.router.navigate(['/login']);
                     }
                 },
@@ -145,26 +136,17 @@ export class CalendarComponent implements OnInit {
                   console.log("Done: " + this.authUser.SessionId);
                   // Show callendar
                   // Fill user events
+                  localStorage.setItem("Authenticated user", JSON.stringify(this.authUser));
+                  //this.fillUserEvents(this.authUser.EventsDTO)
+                  
                 }
               );
-        }
-        this.typeText = "text";
-      }
-  
-  ngOnInit() {
-    this.initProperties();
-  }
-
-  initProperties() {
-
-    this.newEvent.Title = '';
-    this.newEvent.StartsAt = new Date();
-    this.newEvent.EndsAt = new Date();
   }
 
   //#region Functions
   logOut() {
     this.authUser = null;
+    localStorage.removeItem("Authenticated user");
     this.router.navigate(['/login']);
   }
 
@@ -211,6 +193,38 @@ export class CalendarComponent implements OnInit {
       }
     });
     this.refresh.next();
+  }
+
+  fillUserEvents(eventsDTO: Events[]) {
+    //if (eventsDTO == null) return;
+    //eventsDTO.forEach(function (element) {
+      var calendarEvent;
+      calendarEvent.start = subDays(startOfDay(new Date()), 1);
+      calendarEvent.end = addDays(new Date(), 1);
+      calendarEvent.title = 'Probni naslov';
+      calendarEvent.color = colors.yellow;
+      calendarEvent.actions = this.actions;
+      calendarEvent.allDay = true;
+      console.log("Hoce li");
+      console.log(calendarEvent);
+      this.events.push(calendarEvent);
+
+      /*
+      {
+        start: subDays(startOfDay(new Date()), 1),
+        end: addDays(new Date(), 1),
+        title: 'A 3 day event',
+        color: colors.yellow,
+        actions: this.actions,
+        allDay: true,
+        resizable: {
+          beforeStart: true,
+          afterEnd: true
+        },
+        draggable: true
+      },
+        */
+    //}); 
   }
   //#endregion
 }

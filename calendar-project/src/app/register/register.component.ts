@@ -77,6 +77,7 @@ export class RegisterComponent implements OnInit {
     this.currentUser.EnteredPassword = '';
     this.currentUser.RepeteadPassword = '';
     this.registratitonFailed = false;
+    localStorage.clear();
   }
 
   private correctInputForm(): boolean {

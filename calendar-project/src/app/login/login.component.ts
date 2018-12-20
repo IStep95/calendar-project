@@ -94,6 +94,7 @@ export class LoginComponent implements OnInit {
     this.currentUser.Email = '';
     this.currentUser.EnteredPassword = '';
     this.isLoaderIconVisible = false;
+    localStorage.clear();
   }
 
   private async sleep(msec) {
