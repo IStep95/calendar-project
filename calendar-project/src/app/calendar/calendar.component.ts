@@ -62,6 +62,7 @@ export class CalendarComponent implements OnInit {
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   newEvent: Events = new Events();
+  typeText:string;
 
   modalData: {
     action: string;
@@ -147,6 +148,7 @@ export class CalendarComponent implements OnInit {
                 }
               );
         }
+        this.typeText = "text";
       }
   
   ngOnInit() {

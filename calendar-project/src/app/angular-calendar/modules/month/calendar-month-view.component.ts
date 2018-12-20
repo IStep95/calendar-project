@@ -266,6 +266,8 @@ export class CalendarMonthViewComponent
    */
   trackByDate = (index: number, day: MonthViewDay) => day.date.toISOString();
 
+  firstPass: boolean;
+
   /**
    * @hidden
    */
@@ -276,12 +278,15 @@ export class CalendarMonthViewComponent
     private dateAdapter: DateAdapter
   ) {
     this.locale = locale;
+    console.log("Prvo valjda constructor");
+    this.firstPass = true;
   }
 
   /**
    * @hidden
    */
   ngOnInit(): void {
+    console.log("Pozvan ngOnInit");
     if (this.refresh) {
       this.refreshSubscription = this.refresh.subscribe(() => {
         this.refreshAll();
@@ -294,6 +299,7 @@ export class CalendarMonthViewComponent
    * @hidden
    */
   ngOnChanges(changes: any): void {
+    console.log("Pozvan ngOnChanges");
     if (changes.viewDate || changes.excludeDays || changes.weekendDays) {
       this.refreshHeader();
     }
@@ -319,6 +325,13 @@ export class CalendarMonthViewComponent
     ) {
       this.checkActiveDayIsOpen();
     }
+    if (this.firstPass)
+    {
+      this.activeDayIsOpen = false;
+      this.refreshAll();
+      validateEvents(this.events);
+      this.firstPass = false;
+    }  
   }
 
   /**

@@ -58,6 +58,11 @@ export class LoginComponent implements OnInit {
                           this.LoginFailedMessage = "Entered password is incorrect.";
                         } else {
                           this.LoginFailedMessage = "Oooops something went wrong, try later.";
+                          
+                          // Wait one second for better UX
+                          this.sleep(Constants._1000MSEC).then(e => {
+                            this.isLoaderIconVisible = false;
+                          });
                         }
                       },
                       () => {
