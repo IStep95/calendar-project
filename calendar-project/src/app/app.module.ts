@@ -8,21 +8,25 @@ import { CalendarModule, DateAdapter } from './angular-calendar/';
 import { adapterFactory } from './angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
 
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarComponent, SimplePopUpDialog } from './calendar/calendar.component';
 import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    CalendarComponent
+    CalendarComponent,
+    SimplePopUpDialog
+  ],
+  entryComponents: [
+    SimplePopUpDialog
   ],
   imports: [
     BrowserModule,
@@ -30,6 +34,7 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     HttpClientModule,
     CommonModule,
+    MatDialogModule,
     BrowserAnimationsModule,
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({

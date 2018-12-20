@@ -3,10 +3,16 @@ import { Component,
          OnInit, 
          ChangeDetectionStrategy,
          ViewChild,
-         TemplateRef 
+         TemplateRef,
+         Inject,
+         ElementRef,
+         PLATFORM_ID
         } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { isPlatformBrowser } from '@angular/common';
+
 
 import { AuthenticationService } from '../authentication.service';
 import { Users } from '../Model/Users';
@@ -58,12 +64,17 @@ const colors: any = {
 export class CalendarComponent implements OnInit {
   //#region Component members
   @ViewChild('modalContent')
+  @ViewChild('addEventId') addEventButton: ElementRef;
+
+
   modalContent: TemplateRef<any>;
   title: string = "Calendar";
   view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   newEvent: Events = new Events();
+  popUpMessage: string;
+
 
   modalData: {
     action: string;
@@ -95,10 +106,13 @@ export class CalendarComponent implements OnInit {
   //#endregion
 
   constructor(private authenticationService: AuthenticationService,
-              private router: Router, private modal: NgbModal) {
+              private router: Router, private modal: NgbModal, 
+              public dialog: MatDialog,
+              @Inject(PLATFORM_ID) private platformId: Object) {
         if (!this.authenticationService.IsAuthenticated) {
             this.router.navigate(['/login']);
         }
+
         this.authUser = this.authenticationService.getUser();
         if (this.authUser != null) 
           this.getAuthUserData();
@@ -115,8 +129,8 @@ export class CalendarComponent implements OnInit {
 
   initProperties() {
     this.newEvent.Title = '';
-    this.newEvent.StartsAt = new Date();
-    this.newEvent.EndsAt = new Date();
+    this.newEvent.StartsAt = null;
+    this.newEvent.EndsAt = null;
   }
 
   getAuthUserData() {
@@ -181,7 +195,22 @@ export class CalendarComponent implements OnInit {
   }
 
   addEvent(): void {
-    this.events.push({
+    console.log("Ajmo dodat");
+    if (this.newEvent.Title == "Proba") {
+      this.popUpMessage = "You did not enter everything for new event.";
+      const dialogRef = this.dialog.open(SimplePopUpDialog, {
+        width: '200px',
+        data: { message: this.popUpMessage }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        if (isPlatformBrowser(this.platformId)) {
+          console.log("Uso u if");
+          this.addEventButton.nativeElement.blur();
+        }
+      });
+    }
+    /*this.events.push({
       title: 'New event',
       start: startOfDay(new Date()),
       end: endOfDay(new Date()),
@@ -192,22 +221,12 @@ export class CalendarComponent implements OnInit {
         afterEnd: true
       }
     });
-    this.refresh.next();
+    this.refresh.next();*/
   }
-
+  /* TODO */
   fillUserEvents(eventsDTO: Events[]) {
     //if (eventsDTO == null) return;
     //eventsDTO.forEach(function (element) {
-      var calendarEvent;
-      calendarEvent.start = subDays(startOfDay(new Date()), 1);
-      calendarEvent.end = addDays(new Date(), 1);
-      calendarEvent.title = 'Probni naslov';
-      calendarEvent.color = colors.yellow;
-      calendarEvent.actions = this.actions;
-      calendarEvent.allDay = true;
-      console.log("Hoce li");
-      console.log(calendarEvent);
-      this.events.push(calendarEvent);
 
       /*
       {
@@ -227,4 +246,22 @@ export class CalendarComponent implements OnInit {
     //}); 
   }
   //#endregion
+}
+
+export interface DialogData {
+  name: string;
+  message: string;
+  result: string;
+}
+
+@Component({
+  selector: 'app-simple-pop-up-dialog',
+  templateUrl: './simple-pop-up-dialog.html',
+})
+export class SimplePopUpDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<SimplePopUpDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+
 }

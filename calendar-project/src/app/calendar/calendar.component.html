@@ -108,13 +108,12 @@
 
             <br><br><br>
 
-            <h3 id="AddEvent"> Add event
-              <button
+            <h3> Add event
+              <button #addEventId
                 class="btn btn-primary pull-right"
                 (click)="addEvent()">
                 Add
               </button>
-              <div class="clearfix"></div>
             </h3>
 
             <table class="table table-bordered">
@@ -135,6 +134,7 @@
                     [disableMobile]="true"
                     [convertModelValue]="true"
                     [enableTime]="true"
+                    [(ngModel)]="newEvent.StartsAt"
                     dateFormat="Y-m-dTH:i"
                     placeholder="Not set">
                 </td>
@@ -147,6 +147,7 @@
                   mwlFlatpickr
                   [disableMobile]="true"
                   [enableTime]="true"
+                  [(ngModel)]="newEvent.EndsAt"
                   dateFormat="Y-m-dTH:i"
                   placeholder="Not set">
                 </td>
