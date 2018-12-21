@@ -22,13 +22,13 @@ export class RegistrationService {
   ) { }
 
   getUserById(id: number): Observable<Users> {
-    var url = Constants.API_ENDPOINT + "/Get/" + id;
+    var url = Constants.API_ENDPOINT_USER + "/Get/" + id;
     var currUser: Observable<Users> = new Observable<Users>();
     return this.http.get<Users>(url);
   } 
  
   registerUser(regUser: Users): Observable<Users>{
-    var url = Constants.API_ENDPOINT + "/Create";
+    var url = Constants.API_ENDPOINT_USER + "/Create";
     return this.http.post<Users>(url, regUser, httpOptions);
   }
 

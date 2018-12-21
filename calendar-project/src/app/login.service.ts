@@ -25,7 +25,7 @@ export class LoginService {
   }
 
   loginUser(logUser: Users): Observable<Users>{
-    var url = Constants.API_ENDPOINT + "/Authenticate";
+    var url = Constants.API_ENDPOINT_USER + "/Authenticate";
     return this.http.post<Users>(url, logUser, httpOptions);
   }
 }

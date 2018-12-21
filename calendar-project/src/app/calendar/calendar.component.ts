@@ -15,9 +15,12 @@ import { isPlatformBrowser } from '@angular/common';
 
 
 import { AuthenticationService } from '../authentication.service';
+import { EventsService } from '../events.service';
 import { Users } from '../Model/Users';
 import { Events } from '../Model/Events';
 import { HelperHandler } from '../Helpers/HelperHandler';
+import { of } from 'rxjs';
+
 
 import {
   startOfDay,
@@ -35,8 +38,7 @@ import { CalendarEvent,
          CalendarEventAction,
          CalendarEventTimesChangedEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
-import { CalendarEventActionsComponent } from '../angular-calendar/modules/common/calendar-event-actions.component';
-import { forEach } from '@angular/router/src/utils/collection';
+import { StringHandler } from '../Helpers/StringHandler';
 //#endregion
 
 const colors: any = {
@@ -108,7 +110,8 @@ export class CalendarComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService,
               private router: Router, private modal: NgbModal, 
               public dialog: MatDialog,
-              @Inject(PLATFORM_ID) private platformId: Object) {
+              @Inject(PLATFORM_ID) private platformId: Object,
+              private eventsService: EventsService) {
         if (!this.authenticationService.IsAuthenticated) {
             this.router.navigate(['/login']);
         }
@@ -119,11 +122,11 @@ export class CalendarComponent implements OnInit {
       }
   
   ngOnInit() {
-    this.initProperties();
     var retrievedObject = localStorage.getItem('Authenticated user');
     if (retrievedObject != null) {
       this.authUser = JSON.parse(retrievedObject);
       HelperHandler.PrintUser(this.authUser);
+      this.initProperties();
     }
   }
 
@@ -131,6 +134,8 @@ export class CalendarComponent implements OnInit {
     this.newEvent.Title = '';
     this.newEvent.StartsAt = null;
     this.newEvent.EndsAt = null;
+    this.newEvent.UserId = this.authUser.UserId;
+    this.newEvent.Email = this.authUser.Email;
   }
 
   getAuthUserData() {
@@ -196,32 +201,69 @@ export class CalendarComponent implements OnInit {
 
   addEvent(): void {
     console.log("Ajmo dodat");
-    if (this.newEvent.Title == "Proba") {
-      this.popUpMessage = "You did not enter everything for new event.";
+
+    if (!this.correctAddEventInput()) {
+      this.popUpMessage = "You did not enter everything correctly.";
       const dialogRef = this.dialog.open(SimplePopUpDialog, {
         width: '200px',
         data: { message: this.popUpMessage }
       });
       dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
         if (isPlatformBrowser(this.platformId)) {
-          console.log("Uso u if");
           this.addEventButton.nativeElement.blur();
         }
       });
+    } else {
+      //Add event!
+      this.eventsService
+          .createEvent(this.newEvent)
+          .subscribe(
+            (data: Events) => {
+                var successMessage: string = "Event successfuly added."
+                console.log("Uspješno dodan event.");
+                console.log(data);
+                const dialogRef = this.dialog.open(SimplePopUpDialog, {
+                  width: '200px',
+                  data: { message: successMessage }
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                  if (isPlatformBrowser(this.platformId)) {
+                    this.addEventButton.nativeElement.blur();
+                    this.addEventToView();
+                  }});  
+            },
+            err => {
+              var unsuccessMessage: string = "Event was not added. " + err;
+              console.log("Nije dodan event. error: " + err);
+              const dialogRef = this.dialog.open(SimplePopUpDialog, {
+                width: '200px',
+                data: { message: unsuccessMessage }
+              });
+              dialogRef.afterClosed().subscribe(result => {
+                if (isPlatformBrowser(this.platformId)) {
+                  this.addEventButton.nativeElement.blur();
+                }});
+            },
+            () => {}
+          );
     }
-    /*this.events.push({
-      title: 'New event',
-      start: startOfDay(new Date()),
-      end: endOfDay(new Date()),
-      color: colors.red,
-      draggable: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      }
-    });
-    this.refresh.next();*/
+  }
+
+  addEventToView():void {
+    if (this.correctAddEventInput()) {
+      this.events.push ( {
+        title: this.newEvent.Title,
+        start: this.newEvent.StartsAt,
+        end: this.newEvent.EndsAt,
+        color: colors.yellow,
+        draggable: true,
+        resizable: {
+          beforeStart: true,
+          afterEnd: true
+        }
+      });
+      this.refresh.next();
+    } 
   }
   /* TODO */
   fillUserEvents(eventsDTO: Events[]) {
@@ -244,6 +286,20 @@ export class CalendarComponent implements OnInit {
       },
         */
     //}); 
+  }
+  
+  correctAddEventInput(): boolean {
+    var correctInput:boolean = false;
+    console.log(this.newEvent.Title);
+    console.log(!StringHandler.IsNullOrEmpty(this.newEvent.Title));
+    console.log(this.newEvent.StartsAt instanceof Date);
+    console.log(this.newEvent.EndsAt instanceof Date);
+    correctInput = !StringHandler.IsNullOrEmpty(this.newEvent.Title) && 
+              (this.newEvent.StartsAt instanceof Date) && (this.newEvent.EndsAt instanceof Date) &&
+              (this.newEvent.StartsAt < this.newEvent.EndsAt)
+              && (this.newEvent.EndsAt.getTime() > Date.now())
+    
+    return correctInput;
   }
   //#endregion
 }

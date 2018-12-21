@@ -52,6 +52,11 @@ hr {
     align-items: center;
 }
 
+.eventColor {
+    width: 100%;
+    height: 100%;
+}
+
 @media (max-width: 770px) {
     #viewTitleDesktop {
         visibility: hidden;

@@ -27,7 +27,7 @@ export class AuthenticationService {
   }
 
   public getUserById(id: number): Observable<Users> {
-    var url = Constants.API_ENDPOINT + "/Get/" + id;
+    var url = Constants.API_ENDPOINT_USER + "/Get/" + id;
     return this.http.get<Users>(url);
   }
 }
