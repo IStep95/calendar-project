@@ -51,6 +51,7 @@ export class LoginComponent implements OnInit {
                         this.currentUser.DateOfBirth = data['dateOfBirth'];
                         this.currentUser.Email = data['email'];
                         this.currentUser.SessionId = data['sessionId'];
+
                       },
                       err => {
                         this.emailOrPasswordIncorrect = true;
@@ -60,17 +61,18 @@ export class LoginComponent implements OnInit {
                           this.LoginFailedMessage = "Entered password is incorrect.";
                         } else {
                           this.LoginFailedMessage = "Oooops something went wrong, try later.";
-                          
-                          // Wait one second for better UX
-                          this.sleep(Constants._1000MSEC).then(e => {
-                            this.isLoaderIconVisible = false;
-                          });
                         }
+                        
+                        // Wait one second for better UX
+                        this.sleep(Constants._1000MSEC).then(e => {
+                          this.isLoaderIconVisible = false;
+                        });
                       },
                       () => {
                           HelperHandler.PrintUser(this.currentUser);
                           this.loginService.userAuthenticated(this.currentUser);
-                          
+                          localStorage.setItem(Constants.AUTHENTICATED_USER_KEY, JSON.stringify(this.currentUser));
+
                           // Wait one second for better UX
                           this.sleep(Constants._1000MSEC).then(e => {
                             this.router.navigate(['/calendar']);

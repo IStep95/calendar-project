@@ -13,8 +13,9 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) { }
 
-  public IsAuthenticated(): boolean {
-    return this.isAuthenticated;
+  public get IsAuthenticated(): boolean {
+    if (this.authenticatedUser === null) return false;
+    return true;
   }
 
   public userAuthenticated(authUser: Users): void {

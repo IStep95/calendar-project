@@ -42,7 +42,13 @@ export class RegisterComponent implements OnInit {
         .subscribe(
           (data: Users) => {
             this.currentUser.UserId = data['userId'];
+            this.currentUser.FirstName = data['firstName'];
+            this.currentUser.LastName = data['lastName'];
+            this.currentUser.DateOfBirth = data['dateOfBirth'];
+            this.currentUser.Email = data['email'];
             this.currentUser.SessionId = data['sessionId'];
+            
+            localStorage.setItem(Constants.AUTHENTICATED_USER_KEY, JSON.stringify(this.currentUser));
           },
           err => 
           { this.registratitonFailed = true;

@@ -102,28 +102,46 @@ export class CalendarComponent implements OnInit {
   events: CalendarEvent[] = [];
   activeDayIsOpen: boolean = true;
   authUser: Users = null;
+  
+  isUserAuthenticated: boolean = !(localStorage[Constants.AUTHENTICATED_USER_KEY] === null);
   //#endregion
+
 
   constructor(private authenticationService: AuthenticationService,
               private router: Router, private modal: NgbModal, 
               public dialog: MatDialog,
               @Inject(PLATFORM_ID) private platformId: Object,
               private eventsService: EventsService) {
-              if (!this.authenticationService.IsAuthenticated()) {
+              
+              /* Check user authentication */
+              if (!this.isUserAuthenticated) {
                 this.router.navigate(['/login']);
                 console.log("User unauthorized.");
               } 
-              this.authUser = this.authenticationService.getUser();
+              /* Refresh authentication service. Happens on page refresh */
+              if (this.isUserAuthenticated && !this.authenticationService.IsAuthenticated) {
+                this.authUser = JSON.parse(localStorage[Constants.AUTHENTICATED_USER_KEY]);
+                this.authenticationService.userAuthenticated(this.authUser);
+              }
+              
+              console.log("authUser" + this.authUser);
               if (this.authUser != null) this.getAuthUserData();
               
               this.initProperties();
   }
   
   ngOnInit() {
-    if (!this.authenticationService.IsAuthenticated()) {
+
+    /* Check user authentication */
+    if (!this.isUserAuthenticated) {
       this.router.navigate(['/login']);
       console.log("User unauthorized");
       return;
+    }
+    /* Refresh authentication service. Happens on page refresh */
+    if (this.isUserAuthenticated && !this.authenticationService.IsAuthenticated) {
+      this.authUser = JSON.parse(localStorage[Constants.AUTHENTICATED_USER_KEY]);
+      this.authenticationService.userAuthenticated(this.authUser);
     }
     var retrievedObject = localStorage.getItem('Authenticated user');
     if (retrievedObject != null) {
@@ -156,7 +174,6 @@ export class CalendarComponent implements OnInit {
           },
           () => {
             console.log("Done: " + this.authUser.SessionId);
-            localStorage.setItem("Authenticated user", JSON.stringify(this.authUser));
             //this.fillCalendarWithUserEvents(this.authUser.UserId);
             
           }

@@ -1,11 +1,13 @@
 import { Injectable, Injector, ErrorHandler, NgZone, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { Router } from '@angular/router';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class SevereErrorHandler extends ErrorHandler {
 
-  constructor (private injector: Injector) {
+  constructor (private injector: Injector, 
+               private authenticationService: AuthenticationService) {
     super();
   }
   isInErrorState: boolean = false;
@@ -14,9 +16,13 @@ export class SevereErrorHandler extends ErrorHandler {
     
     /** With router redirecting not working */
     /** Use: window.location.href */
-    if (!this.isInErrorState) {
+    /** Used for redirecting unauthorized user from /calendar to /login */
+    console.error(error);
+    console.log(this.authenticationService.IsAuthenticated);
+
+    if (!this.isInErrorState && this.authenticationService.IsAuthenticated) {
       this.isInErrorState = true;
-      window.location.href = './login'; 
+      //window.location.href = './login'; 
       
       //this.zone.run(() => {
       //   console.log(this.router.url); 
@@ -36,6 +42,8 @@ export class SevereErrorHandler extends ErrorHandler {
     return this.injector.get(NgZone);
   }
   
+  public get 
+
 }
 
 @NgModule({

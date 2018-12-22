@@ -14,17 +14,6 @@ export class Constants {
     
     public static UNAUTHORIZED:number = 401;
 
-    
-    /*
-    var x = this.registrationService.getUserById(1).subscribe(
-    data => { currentUser = data},
-    err => console.error(err),
-    () => 
-    { 
-        console.log('done loading user');
-        console.log(currentUser.email);
-    }
-    );
-    */
+    public static AUTHENTICATED_USER_KEY = "Authenticated user";
 
 } 
