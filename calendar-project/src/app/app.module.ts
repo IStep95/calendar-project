@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { NgModule, ErrorHandler } from '@angular/core';
+import { Injectable, Injector, ErrorHandler, NgZone, NgModule } from '@angular/core';
 import { HttpClientModule }    from '@angular/common/http';
 
 import { CalendarModule, DateAdapter } from './angular-calendar/';
@@ -16,8 +16,8 @@ import { RegisterComponent } from './register/register.component';
 import { CalendarComponent, SimplePopUpDialog } from './calendar/calendar.component';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material';
+import { Router } from '@angular/router';
 import { SevereErrorHandler } from './severe-error-handler'
-
 
 @NgModule({
   declarations: [
