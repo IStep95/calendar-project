@@ -18,8 +18,13 @@ export class AuthenticationService {
   }
 
   public userAuthenticated(authUser: Users): void {
-    this.isAuthenticated = true;
-    this.authenticatedUser = authUser;
+      this.isAuthenticated = true;
+      this.authenticatedUser = authUser;
+  }
+
+  public userLogOut(): void {
+    this.isAuthenticated = false;
+    localStorage.removeItem("Authenticated user");
   }
 
   public getUser(): Users {
@@ -30,4 +35,5 @@ export class AuthenticationService {
     var url = Constants.API_ENDPOINT_USER + "/Get/" + id;
     return this.http.get<Users>(url);
   }
+
 }

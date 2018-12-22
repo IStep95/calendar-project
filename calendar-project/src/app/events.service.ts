@@ -69,4 +69,42 @@ export class EventsService {
 
     return of(returnEvent);
   }
+
+  /** Get user events by user id */
+  /** Plus converts dates from database(UTC datetime) to local datetime */
+  getUserEvents(userId: number): Observable<Events[]> {
+    var url = Constants.API_ENDPOINT_EVENT + "/GetUserEvents/" + userId;
+
+    var tmpObservable: Observable<Events[]>;
+    var returnEvents: Events[];
+    tmpObservable = this.http.get<Events[]>(url);
+    tmpObservable.subscribe((data: Events[]) => 
+    {
+      try {
+
+        for (let element of data)
+        {
+          var startsAtUTC = new Date(element['startsAt']);
+          var endsAtUTC = new Date(element['endsAt']);
+
+          var startsAt = HelperHandler.GetLocalDateTimeFromUTC(startsAtUTC);
+          var endsAt = HelperHandler.GetLocalDateTimeFromUTC(endsAtUTC);
+
+          returnEvents.push ({
+            EventId: element['eventId'],
+            Title: element['title'],
+            Email: element['email'],
+            StartsAt: startsAt,
+            EndsAt: endsAtUTC,
+            UserId: element['userId']
+          });
+        }
+      } catch(e) {
+        console.log(e);
+      }
+    });
+
+    console.log(returnEvents);
+    return of(returnEvents);
+  }
 }

@@ -1,5 +1,6 @@
 import { Users } from "../Model/Users";
 import { Events } from "../Model/Events";
+import { StringHandler } from '../Helpers/StringHandler';
 
 export class HelperHandler {
     public static PrintUser(user: Users): void
@@ -41,4 +42,13 @@ export class HelperHandler {
         console.log("email: " + event.Email);
     }
 
+    public static CorrectAddEventInput(newEvent: Events): boolean {
+        var correctInput:boolean = false;
+        correctInput = !StringHandler.IsNullOrEmpty(newEvent.Title) && 
+                  (newEvent.StartsAt instanceof Date) && (newEvent.EndsAt instanceof Date) &&
+                  (newEvent.StartsAt <= newEvent.EndsAt)
+                  && (newEvent.EndsAt.getTime() > Date.now())
+        
+        return correctInput;
+      }
 }

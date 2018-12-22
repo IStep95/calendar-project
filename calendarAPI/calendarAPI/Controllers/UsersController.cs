@@ -77,7 +77,7 @@ namespace calendarAPI.Controllers
 					db.Add(user);
 					db.SaveChanges();
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					return BadRequest("User already exists with same email.");
 				}
@@ -113,6 +113,18 @@ namespace calendarAPI.Controllers
 			user.DateOfBirth = userDTO.DateOfBirth;
 
 			return user;
+		}
+
+		private UsersDTO convertUserToUserDTO(Users users)
+		{
+			UsersDTO usersDTO = new UsersDTO();
+			usersDTO.Email = users.Email;
+			usersDTO.FirstName = users.FirstName;
+			usersDTO.LastName = users.LastName;
+			usersDTO.DateOfBirth = users.DateOfBirth;
+			usersDTO.SessionId = users.SessionId;
+
+			return usersDTO;
 		}
 	}
 }

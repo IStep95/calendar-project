@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpClientModule }    from '@angular/common/http';
 
 import { CalendarModule, DateAdapter } from './angular-calendar/';
@@ -16,6 +16,8 @@ import { RegisterComponent } from './register/register.component';
 import { CalendarComponent, SimplePopUpDialog } from './calendar/calendar.component';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material';
+import { SevereErrorHandler } from './severe-error-handler'
+
 
 @NgModule({
   declarations: [
@@ -42,7 +44,7 @@ import { MatDialogModule } from '@angular/material';
       useFactory: adapterFactory
     })
   ],
-  providers: [],
+  providers: [{provide: ErrorHandler, useClass: SevereErrorHandler, useValue: this}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

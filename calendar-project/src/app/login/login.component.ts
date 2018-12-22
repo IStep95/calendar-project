@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   isLoaderIconVisible: boolean = false;
 
   constructor(private loginService: LoginService,
-              private router: Router) { }
+              public router: Router) { }
 
   ngOnInit() {
     this.initProperties();
@@ -48,6 +48,8 @@ export class LoginComponent implements OnInit {
                         this.currentUser.UserId = data['userId'];
                         this.currentUser.FirstName = data['firstName'];
                         this.currentUser.LastName = data['lastName'];
+                        this.currentUser.DateOfBirth = data['dateOfBirth'];
+                        this.currentUser.Email = data['email'];
                         this.currentUser.SessionId = data['sessionId'];
                       },
                       err => {
@@ -101,4 +103,8 @@ export class LoginComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, msec));
   }
   
+  public NavigateToLoginPage() : void
+  {
+    this.router.navigate['/login'];
+  }
 }

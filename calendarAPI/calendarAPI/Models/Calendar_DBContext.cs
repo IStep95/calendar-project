@@ -33,8 +33,6 @@ namespace calendarAPI.Models
             {
                 entity.HasKey(e => e.EventId);
 
-                entity.Property(e => e.EventId).ValueGeneratedNever();
-
                 entity.Property(e => e.Email).HasMaxLength(50);
 
                 entity.Property(e => e.EndsAt).HasColumnType("datetime");
@@ -48,7 +46,7 @@ namespace calendarAPI.Models
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__Events__UserId__6A30C649");
+                    .HasConstraintName("FK__Events__UserId__6D0D32F4");
             });
 
             modelBuilder.Entity<Users>(entity =>

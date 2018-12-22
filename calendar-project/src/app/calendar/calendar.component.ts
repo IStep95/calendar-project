@@ -39,6 +39,7 @@ import { CalendarEvent,
          CalendarEventTimesChangedEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
 import { StringHandler } from '../Helpers/StringHandler';
+import { Constants } from '../Constants';
 //#endregion
 
 const colors: any = {
@@ -76,8 +77,6 @@ export class CalendarComponent implements OnInit {
   viewDate: Date = new Date();
   newEvent: Events = new Events();
   popUpMessage: string;
-
-
   modalData: {
     action: string;
     event: CalendarEvent;
@@ -100,11 +99,9 @@ export class CalendarComponent implements OnInit {
     }
   ];
   refresh: Subject<any> = new Subject();
-
   events: CalendarEvent[] = [];
   activeDayIsOpen: boolean = true;
   authUser: Users = null;
-
   //#endregion
 
   constructor(private authenticationService: AuthenticationService,
@@ -112,60 +109,63 @@ export class CalendarComponent implements OnInit {
               public dialog: MatDialog,
               @Inject(PLATFORM_ID) private platformId: Object,
               private eventsService: EventsService) {
-        if (!this.authenticationService.IsAuthenticated) {
-            this.router.navigate(['/login']);
-        }
-
-        this.authUser = this.authenticationService.getUser();
-        if (this.authUser != null) 
-          this.getAuthUserData();
-      }
+              if (!this.authenticationService.IsAuthenticated()) {
+                this.router.navigate(['/login']);
+                console.log("User unauthorized.");
+              } 
+              this.authUser = this.authenticationService.getUser();
+              if (this.authUser != null) this.getAuthUserData();
+              
+              this.initProperties();
+  }
   
   ngOnInit() {
+    if (!this.authenticationService.IsAuthenticated()) {
+      this.router.navigate(['/login']);
+      console.log("User unauthorized");
+      return;
+    }
     var retrievedObject = localStorage.getItem('Authenticated user');
     if (retrievedObject != null) {
       this.authUser = JSON.parse(retrievedObject);
       HelperHandler.PrintUser(this.authUser);
-      this.initProperties();
+      this.newEvent.UserId = this.authUser.UserId;
+      this.newEvent.Email = this.authUser.Email;
     }
+    this.initProperties();
   }
 
   initProperties() {
     this.newEvent.Title = '';
     this.newEvent.StartsAt = null;
     this.newEvent.EndsAt = null;
-    this.newEvent.UserId = this.authUser.UserId;
-    this.newEvent.Email = this.authUser.Email;
   }
 
   getAuthUserData() {
     this.authenticationService
-              .getUserById(this.authUser.UserId)
-              .subscribe(
-                (data: Users) => {
-                    if (!(this.authUser.SessionId === data['sessionId'])){
-                      this.router.navigate(['/login']);
-                    }
-                },
-                err => {
-                  console.log(err.error);
-                  this.router.navigate(['/login']);
-                },
-                () => {
-                  console.log("Done: " + this.authUser.SessionId);
-                  // Show callendar
-                  // Fill user events
-                  localStorage.setItem("Authenticated user", JSON.stringify(this.authUser));
-                  //this.fillUserEvents(this.authUser.EventsDTO)
-                  
-                }
-              );
+        .getUserById(this.authUser.UserId)
+        .subscribe(
+          (data: Users) => {
+              if (!(this.authUser.SessionId === data['sessionId'])){
+                this.router.navigate(['/login']);
+              }
+          },
+          err => {
+            console.log(err.error);
+            this.router.navigate(['/login']);
+          },
+          () => {
+            console.log("Done: " + this.authUser.SessionId);
+            localStorage.setItem("Authenticated user", JSON.stringify(this.authUser));
+            //this.fillCalendarWithUserEvents(this.authUser.UserId);
+            
+          }
+        );
   }
 
   //#region Functions
   logOut() {
-    this.authUser = null;
-    localStorage.removeItem("Authenticated user");
+    this.authenticationService.userLogOut();
     this.router.navigate(['/login']);
   }
 
@@ -200,9 +200,7 @@ export class CalendarComponent implements OnInit {
   }
 
   addEvent(): void {
-    console.log("Ajmo dodat");
-
-    if (!this.correctAddEventInput()) {
+    if (!HelperHandler.CorrectAddEventInput(this.newEvent)) {
       this.popUpMessage = "You did not enter everything correctly.";
       const dialogRef = this.dialog.open(SimplePopUpDialog, {
         width: '200px',
@@ -234,7 +232,7 @@ export class CalendarComponent implements OnInit {
             },
             err => {
               var unsuccessMessage: string = "Event was not added. " + err;
-              console.log("Nije dodan event. error: " + err);
+              console.log("Event was not added. error: " + err);
               const dialogRef = this.dialog.open(SimplePopUpDialog, {
                 width: '200px',
                 data: { message: unsuccessMessage }
@@ -250,7 +248,7 @@ export class CalendarComponent implements OnInit {
   }
 
   addEventToView():void {
-    if (this.correctAddEventInput()) {
+    if (HelperHandler.CorrectAddEventInput(this.newEvent)) {
       this.events.push ( {
         title: this.newEvent.Title,
         start: this.newEvent.StartsAt,
@@ -265,45 +263,47 @@ export class CalendarComponent implements OnInit {
       this.refresh.next();
     } 
   }
-  /* TODO */
-  fillUserEvents(eventsDTO: Events[]) {
-    //if (eventsDTO == null) return;
-    //eventsDTO.forEach(function (element) {
 
-      /*
-      {
-        start: subDays(startOfDay(new Date()), 1),
-        end: addDays(new Date(), 1),
-        title: 'A 3 day event',
-        color: colors.yellow,
-        actions: this.actions,
-        allDay: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true
-        },
-        draggable: true
-      },
-        */
-    //}); 
-  }
-  
-  correctAddEventInput(): boolean {
-    var correctInput:boolean = false;
-    console.log(this.newEvent.Title);
-    console.log(!StringHandler.IsNullOrEmpty(this.newEvent.Title));
-    console.log(this.newEvent.StartsAt instanceof Date);
-    console.log(this.newEvent.EndsAt instanceof Date);
-    correctInput = !StringHandler.IsNullOrEmpty(this.newEvent.Title) && 
-              (this.newEvent.StartsAt instanceof Date) && (this.newEvent.EndsAt instanceof Date) &&
-              (this.newEvent.StartsAt < this.newEvent.EndsAt)
-              && (this.newEvent.EndsAt.getTime() > Date.now())
-    
-    return correctInput;
+  fillCalendarWithUserEvents(userId :number) {
+    var eventsDTO: Events[];
+    this.eventsService
+        .getUserEvents(userId)
+        .subscribe(
+          (data :Events[]) => {
+            for (let element of eventsDTO)
+            {
+              this.events.push({
+                start: element.StartsAt,
+                end: element.EndsAt,
+                title: element.Title,
+                meta: element.Email,
+                color: colors.yellow,
+                actions: this.actions,
+                resizable: {
+                  beforeStart: true,
+                  afterEnd: true
+                },
+                draggable: true
+              })
+            }
+          },
+          (err) => {
+            if (err.status === Constants.BAD_REQUEST) {
+              console.error("Can not get user events");
+            }
+            else {
+              console.error("Unsupported error." + err);
+            }            
+          },
+          () => {
+            console.log("Done. Loading user events.");
+          }
+        );
   }
   //#endregion
 }
 
+//#region  Dialog component
 export interface DialogData {
   name: string;
   message: string;
@@ -321,3 +321,4 @@ export class SimplePopUpDialog {
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
 }
+//#endregion
