@@ -125,7 +125,6 @@ export class CalendarComponent implements OnInit {
                 this.authenticationService.userAuthenticated(this.authUser);
               }
               
-              console.log("authUser" + this.authUser);
               if (this.authUser != null) this.getAuthUserData();
               this.initProperties();
   }
@@ -219,7 +218,7 @@ export class CalendarComponent implements OnInit {
       this.eventsService
           .deleteEvent(Number(event.id))
           .subscribe((data: Events) => {
-            var successMessage: string = "Event '" + data['title'] + "' successfuly deleted. ";
+            var successMessage: string = 'Event \"' + data['title'] + '\" deleted. ';
             const dialogRef = this.dialog.open(SimplePopUpDialog, {
               width: '200px',
               data: { message: successMessage }
@@ -272,7 +271,6 @@ export class CalendarComponent implements OnInit {
                 this.newEvent = HelperHandler.MapDataToEvents(data);
 
                 var successMessage: string = "Event successfuly added."
-                console.log(data);
                 const dialogRef = this.dialog.open(SimplePopUpDialog, {
                   width: '200px',
                   data: { message: successMessage }

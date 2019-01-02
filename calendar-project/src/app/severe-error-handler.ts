@@ -19,10 +19,12 @@ export class SevereErrorHandler extends ErrorHandler {
     /** Used for redirecting unauthorized user from /calendar to /login */
     console.error(error);
     console.log(this.authenticationService.IsAuthenticated);
+    window.location.href = '/login';
+
 
     if (!this.isInErrorState && this.authenticationService.IsAuthenticated) {
       this.isInErrorState = true;
-      //window.location.href = './login'; 
+       
       
       //this.zone.run(() => {
       //   console.log(this.router.url); 
