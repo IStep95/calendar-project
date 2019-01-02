@@ -24,8 +24,8 @@
                        [ngClass]="{ 'is-invalid': submitted && (currentUser.EnteredPassword.length == 0) }"  />
                 <div *ngIf="submitted && (currentUser.EnteredPassword.length == 0)" class="invalid-response">User password is required.</div>
               </div>
-              <button type="button" (focusout)="onLoginFocusOut()" id="loginBtn" class="btn btn-primary">Login</button>
-              <button type="button" id="registerBtn" routerLink="/register" class="btn btn-secondary">Register</button>
+              <button (focusout)="onLoginFocusOut()" id="loginBtn" class="btn btn-primary">Login</button>
+              <button  type="button" id="registerBtn" routerLink="/register" class="btn btn-secondary">Register</button>
               <img id="loaderIcon" src="../assets/images/loader.svg" class="pull-right" [ngStyle]="{'visibility': isLoaderIconVisible ? 'visible' : 'hidden'}" />
             </form>
 
