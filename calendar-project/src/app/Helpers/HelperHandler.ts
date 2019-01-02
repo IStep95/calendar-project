@@ -33,6 +33,19 @@ export class HelperHandler {
         return value;
     }
 
+    public static MapDataToEvents(data: Events): Events
+    {
+        var returnEvent: Events = new Events();
+        returnEvent.EventId = data['eventId'];
+        returnEvent.Title = data['title'];
+        returnEvent.Email = data['email'];
+        returnEvent.StartsAt = new Date(data['startsAt']);
+        returnEvent.EndsAt = new Date(data['endsAt']);
+        returnEvent.UserId = data['userId'];
+
+        return returnEvent;
+    }
+
     public static PrintEvent(event: Events): void 
     {
         console.log("event id: " + event.EventId);

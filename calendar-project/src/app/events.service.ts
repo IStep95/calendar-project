@@ -32,16 +32,15 @@ export class EventsService {
       returnEvent.EventId = data['eventId'];
       returnEvent.Title = data['title'];
       returnEvent.Email = data['email'];
-      returnEvent.StartsAt = new Date(data['startAt']);
+      returnEvent.StartsAt = new Date(data['startsAt']);
       returnEvent.EndsAt = new Date(data['endsAt']);
 
-      returnEvent.StartsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.StartsAt);
-      returnEvent.EndsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.EndsAt);
+      //returnEvent.StartsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.StartsAt.toUTCString());
+      //returnEvent.EndsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.EndsAt.toUTCString());
       returnEvent.UserId = data['userId'];
+      //HelperHandler.PrintEvent(returnEvent);
     })
-
-
-    return of(returnEvent);
+    return tmpObservable;
   }
 
   /** Get event by id  */
@@ -61,10 +60,10 @@ export class EventsService {
       returnEvent.EndsAt = new Date(data['endsAt']);
       returnEvent.UserId = data['userId'];
 
-      returnEvent.StartsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.StartsAt);
-      returnEvent.EndsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.EndsAt);
+      //returnEvent.StartsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.StartsAt.toUTCString());
+      //returnEvent.EndsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.EndsAt.toUTCString());
 
-      HelperHandler.PrintEvent(returnEvent);
+      //HelperHandler.PrintEvent(returnEvent);
     });
 
     return of(returnEvent);
@@ -78,33 +77,17 @@ export class EventsService {
     var tmpObservable: Observable<Events[]>;
     var returnEvents: Events[];
     tmpObservable = this.http.get<Events[]>(url);
-    tmpObservable.subscribe((data: Events[]) => 
-    {
-      try {
+    tmpObservable.subscribe((data: Events[]) =>  {});
 
-        for (let element of data)
-        {
-          var startsAtUTC = new Date(element['startsAt']);
-          var endsAtUTC = new Date(element['endsAt']);
+    return tmpObservable;
+  }
 
-          var startsAt = HelperHandler.GetLocalDateTimeFromUTC(startsAtUTC);
-          var endsAt = HelperHandler.GetLocalDateTimeFromUTC(endsAtUTC);
+  /** Delete user event */
+  deleteEvent(id: number): Observable<Events> {
+    var url = Constants.API_ENDPOINT_EVENT + "/Delete";
+    var tmpObservable: Observable<Events>;
+    tmpObservable = this.http.post<Events>(url, id, httpOptions);
 
-          returnEvents.push ({
-            EventId: element['eventId'],
-            Title: element['title'],
-            Email: element['email'],
-            StartsAt: startsAt,
-            EndsAt: endsAtUTC,
-            UserId: element['userId']
-          });
-        }
-      } catch(e) {
-        console.log(e);
-      }
-    });
-
-    console.log(returnEvents);
-    return of(returnEvents);
+    return tmpObservable;
   }
 }

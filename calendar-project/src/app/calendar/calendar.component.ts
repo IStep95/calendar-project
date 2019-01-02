@@ -40,6 +40,7 @@ import { CalendarEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
 import { StringHandler } from '../Helpers/StringHandler';
 import { Constants } from '../Constants';
+import { strictEqual } from 'assert';
 //#endregion
 
 const colors: any = {
@@ -92,9 +93,9 @@ export class CalendarComponent implements OnInit {
     {
       label: '<i class="fa fa-fw fa-times"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
         this.handleEvent('Deleted', event);
-        //Add delete...
+        this.activeDayIsOpen = false;
+        //Add delete..
       }
     }
   ];
@@ -126,7 +127,6 @@ export class CalendarComponent implements OnInit {
               
               console.log("authUser" + this.authUser);
               if (this.authUser != null) this.getAuthUserData();
-              
               this.initProperties();
   }
   
@@ -149,6 +149,9 @@ export class CalendarComponent implements OnInit {
       HelperHandler.PrintUser(this.authUser);
       this.newEvent.UserId = this.authUser.UserId;
       this.newEvent.Email = this.authUser.Email;
+
+      //** Get user events **/
+      this.fillCalendarWithUserEvents(this.authUser.UserId);
     }
     this.initProperties();
   }
@@ -174,7 +177,6 @@ export class CalendarComponent implements OnInit {
           },
           () => {
             console.log("Done: " + this.authUser.SessionId);
-            //this.fillCalendarWithUserEvents(this.authUser.UserId);
             
           }
         );
@@ -212,8 +214,41 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+    if (action === "Deleted") {
+      console.log(event.id);
+      this.eventsService
+          .deleteEvent(Number(event.id))
+          .subscribe((data: Events) => {
+            var successMessage: string = "Event '" + data['title'] + "' successfuly deleted. ";
+            const dialogRef = this.dialog.open(SimplePopUpDialog, {
+              width: '200px',
+              data: { message: successMessage }
+            });
+            var index = 0;
+            var foundElement: boolean = false;
+            for (let element of this.events) {
+              if (element.id == event.id) 
+              {
+                foundElement = true;
+                break;
+              }
+              index++;
+            }
+            if (foundElement === true) this.events.splice(index, 1);
+            dialogRef.afterClosed().subscribe(result => {
+              if (isPlatformBrowser(this.platformId)) {
+                this.refresh.next();
+              }});
+          },
+          (err) => {
+            const dialogRef = this.dialog.open(SimplePopUpDialog, {
+              width: '200px',
+              data: { message: err }
+            });
+            dialogRef.afterClosed();
+          },
+          () => {});
+    }
   }
 
   addEvent(): void {
@@ -234,8 +269,9 @@ export class CalendarComponent implements OnInit {
           .createEvent(this.newEvent)
           .subscribe(
             (data: Events) => {
+                this.newEvent = HelperHandler.MapDataToEvents(data);
+
                 var successMessage: string = "Event successfuly added."
-                console.log("Uspješno dodan event.");
                 console.log(data);
                 const dialogRef = this.dialog.open(SimplePopUpDialog, {
                   width: '200px',
@@ -245,7 +281,7 @@ export class CalendarComponent implements OnInit {
                   if (isPlatformBrowser(this.platformId)) {
                     this.addEventButton.nativeElement.blur();
                     this.addEventToView();
-                  }});  
+                  }});
             },
             err => {
               var unsuccessMessage: string = "Event was not added. " + err;
@@ -266,11 +302,15 @@ export class CalendarComponent implements OnInit {
 
   addEventToView():void {
     if (HelperHandler.CorrectAddEventInput(this.newEvent)) {
+      console.log("Dodajemo id " + this.newEvent.EventId);
+      HelperHandler.PrintEvent(this.newEvent);
       this.events.push ( {
+        id: this.newEvent.EventId,
         title: this.newEvent.Title,
         start: this.newEvent.StartsAt,
         end: this.newEvent.EndsAt,
         color: colors.yellow,
+        actions: this.actions,
         draggable: true,
         resizable: {
           beforeStart: true,
@@ -286,14 +326,22 @@ export class CalendarComponent implements OnInit {
     this.eventsService
         .getUserEvents(userId)
         .subscribe(
-          (data :Events[]) => {
-            for (let element of eventsDTO)
+          (data : Events[]) => {
+
+            for (let element of data)
             {
+              var startsAtUTC = new Date(element['startsAt']);
+              var endsAtUTC = new Date(element['endsAt']);
+
+              var startsAt = HelperHandler.GetLocalDateTimeFromUTC(startsAtUTC);
+              var endsAt = HelperHandler.GetLocalDateTimeFromUTC(endsAtUTC);
+
               this.events.push({
-                start: element.StartsAt,
-                end: element.EndsAt,
-                title: element.Title,
-                meta: element.Email,
+                id: element['eventId'],
+                start: startsAt,
+                end: endsAt,
+                title: element['title'],
+                meta: element['email'],
                 color: colors.yellow,
                 actions: this.actions,
                 resizable: {
@@ -301,7 +349,9 @@ export class CalendarComponent implements OnInit {
                   afterEnd: true
                 },
                 draggable: true
-              })
+              });
+              this.eventTimesChanged
+              this.refresh.next();
             }
           },
           (err) => {

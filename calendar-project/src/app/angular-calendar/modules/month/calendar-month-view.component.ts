@@ -362,6 +362,9 @@ export class CalendarMonthViewComponent
     event: CalendarEvent,
     draggedFrom?: MonthViewDay
   ): void {
+    console.log("poziv eventDropped");
+    /** Disable drag and drop */
+    /*
     if (droppedOn !== draggedFrom) {
       const year: number = this.dateAdapter.getYear(droppedOn.date);
       const month: number = this.dateAdapter.getMonth(droppedOn.date);
@@ -388,7 +391,7 @@ export class CalendarMonthViewComponent
         day: droppedOn,
         type: CalendarEventTimesChangedEventType.Drop
       });
-    }
+    }*/
   }
 
   private refreshHeader(): void {

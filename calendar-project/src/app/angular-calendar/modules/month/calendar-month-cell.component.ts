@@ -36,12 +36,6 @@ import { PlacementArray } from 'positioning';
           *ngFor="let event of day.events; trackBy: trackByEventId"
           [style.backgroundColor]="event.color?.primary"
           [ngClass]="event?.cssClass"
-          mwlDraggable
-          [class.cal-draggable]="event.draggable"
-          dragActiveClass="cal-drag-active"
-          [dropData]="{ event: event, draggedFrom: day }"
-          [dragAxis]="{ x: event.draggable, y: event.draggable }"
-          
         ></div>
       </div>
     </ng-template>
