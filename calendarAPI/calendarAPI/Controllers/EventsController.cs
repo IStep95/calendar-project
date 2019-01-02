@@ -74,6 +74,29 @@ namespace calendarAPI.Controllers
 			return Ok(eventsDTOs);
 		}
 
+		// POST api/events/delete/5
+		[HttpPost("Delete")]
+		public ActionResult<EventsDTO> Delete([FromBody] int id)
+		{
+			Events deleteEvent = null;
+			try
+			{
+				using (var db = new Calendar_DBContext())
+				{
+					deleteEvent = db.Events.Find(id);
+					db.Events.Remove(deleteEvent);
+					db.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest("Can not delete event. " + ex.Message);
+			}
+			if (deleteEvent == null) return BadRequest("Can not delete event. ");
+
+			return Ok(deleteEvent);
+		}
+
 		private EventsDTO convertModelToDTO(Events events)
 		{
 			EventsDTO eventsDTO = new EventsDTO();

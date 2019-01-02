@@ -64,12 +64,12 @@ namespace calendarAPI.Controllers
 		[HttpPost("Create")]
 		public ActionResult<UsersDTO> Create(UsersDTO userDTO)
 		{
+			Users user = null;
 			using (var db = new Calendar_DBContext())
 			{
 				try
-				{
-
-					Users user = convertUserDTOToUser(userDTO);
+				{ 
+					user = convertUserDTOToUser(userDTO);
 					user.PasswordHash = computePasswordHash(userDTO.EnteredPassword);
 					user.SessionId = this.HttpContext.Session.Id;
 					userDTO.SessionId = user.SessionId;
@@ -82,7 +82,7 @@ namespace calendarAPI.Controllers
 					return BadRequest("User already exists with same email.");
 				}
 			}
-			return Ok(userDTO);
+			return Ok(convertUserToUserDTO(user));
 		}
 
 		// PUT api/users/5
@@ -111,6 +111,7 @@ namespace calendarAPI.Controllers
 			user.FirstName = userDTO.FirstName;
 			user.LastName = userDTO.LastName;
 			user.DateOfBirth = userDTO.DateOfBirth;
+			user.UserId = userDTO.UserId;
 
 			return user;
 		}
@@ -123,6 +124,7 @@ namespace calendarAPI.Controllers
 			usersDTO.LastName = users.LastName;
 			usersDTO.DateOfBirth = users.DateOfBirth;
 			usersDTO.SessionId = users.SessionId;
+			usersDTO.UserId = users.UserId;
 
 			return usersDTO;
 		}
