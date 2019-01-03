@@ -97,6 +97,35 @@ namespace calendarAPI.Controllers
 			return Ok(deleteEvent);
 		}
 
+		// POST api/events/update
+		[HttpPost("Update")]
+		public ActionResult<EventsDTO> Update([FromBody] EventsDTO newEvent)
+		{
+			Events updatedEvent = null;
+			try
+			{
+				using (var db = new Calendar_DBContext())
+				{
+					updatedEvent = db.Events.Find(newEvent.EventId);
+
+					// Using convertToModel throws update exception
+					updatedEvent.Email = newEvent.Email;
+					updatedEvent.StartsAt = newEvent.StartsAt;
+					updatedEvent.EndsAt = newEvent.EndsAt;
+					updatedEvent.Title = newEvent.Title;
+					updatedEvent.UserId = newEvent.UserId;
+					db.Events.Update(updatedEvent);
+					db.SaveChanges();
+				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest("Failed to update an event. " + ex.Message);
+			}
+			if (updatedEvent == null) return BadRequest("Failed to update an event. ");
+			return Ok(convertModelToDTO(updatedEvent));
+		}
+
 		private EventsDTO convertModelToDTO(Events events)
 		{
 			EventsDTO eventsDTO = new EventsDTO();
@@ -122,5 +151,6 @@ namespace calendarAPI.Controllers
 
 			return events;
 		}
+
 	}
 }

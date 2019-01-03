@@ -19,7 +19,7 @@ export class SevereErrorHandler extends ErrorHandler {
     /** Used for redirecting unauthorized user from /calendar to /login */
     console.error(error);
     console.log(this.authenticationService.IsAuthenticated);
-    window.location.href = '/login';
+    //window.location.href = '/login';
 
 
     if (!this.isInErrorState && this.authenticationService.IsAuthenticated) {
@@ -43,8 +43,6 @@ export class SevereErrorHandler extends ErrorHandler {
   public get zone(): NgZone {
     return this.injector.get(NgZone);
   }
-  
-  public get 
 
 }
 

@@ -90,4 +90,13 @@ export class EventsService {
 
     return tmpObservable;
   }
+
+  /** Update user event */
+  updateEvent(event: Events): Observable<Events> {
+    var url = Constants.API_ENDPOINT_EVENT + "/Update";
+    var tmpObservable: Observable<Events>;
+    tmpObservable = this.http.post<Events>(url, event, httpOptions);
+
+    return tmpObservable;
+  }
 }

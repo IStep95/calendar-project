@@ -12,14 +12,17 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { isPlatformBrowser } from '@angular/common';
-
+import { setImmediate } from 'setImmediate';
 
 import { AuthenticationService } from '../authentication.service';
 import { EventsService } from '../events.service';
 import { Users } from '../Model/Users';
 import { Events } from '../Model/Events';
 import { HelperHandler } from '../Helpers/HelperHandler';
+import { CalendarState } from '../calendar-state';
+
 import { of } from 'rxjs';
+
 
 
 import {
@@ -68,16 +71,20 @@ const colors: any = {
 export class CalendarComponent implements OnInit {
   //#region Component members
   @ViewChild('modalContent')
-  @ViewChild('addEventId') addEventButton: ElementRef;
-
+  @ViewChild('addEventId') addEditEventButton: ElementRef;
+  @ViewChild('info') edit: ElementRef;
 
   modalContent: TemplateRef<any>;
   title: string = "Calendar";
   view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
   viewDate: Date = new Date();
-  newEvent: Events = new Events();
+  currentEvent: Events = new Events();
   popUpMessage: string;
+  AddEditEventTitle: string; 
+  AddEditButton: string;
+  calendarState:CalendarState;
+
   modalData: {
     action: string;
     event: CalendarEvent;
@@ -87,24 +94,32 @@ export class CalendarComponent implements OnInit {
       label: '<i class="fa fa-fw fa-pencil"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.handleEvent('Edited', event);
-        //Add edit...
       }
     },
     {
       label: '<i class="fa fa-fw fa-times"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.handleEvent('Deleted', event);
-        this.activeDayIsOpen = false;
-        //Add delete..
       }
     }
   ];
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
-  activeDayIsOpen: boolean = true;
+  activeDayIsOpen: boolean = true; 
   authUser: Users = null;
-  
   isUserAuthenticated: boolean = !(localStorage[Constants.AUTHENTICATED_USER_KEY] === null);
+
+  get ActiveDayIsOpen(): boolean {
+    return this.activeDayIsOpen;
+  }
+  set ActiveDayIsOpen(value: boolean) {
+    
+    if ((this.activeDayIsOpen === true) && (value === false))
+      this.setAddState();
+
+    this.activeDayIsOpen = value;
+  }
+
   //#endregion
 
 
@@ -146,19 +161,48 @@ export class CalendarComponent implements OnInit {
     if (retrievedObject != null) {
       this.authUser = JSON.parse(retrievedObject);
       HelperHandler.PrintUser(this.authUser);
-      this.newEvent.UserId = this.authUser.UserId;
-      this.newEvent.Email = this.authUser.Email;
+      this.currentEvent.UserId = this.authUser.UserId;
+      this.currentEvent.Email = this.authUser.Email;
 
-      //** Get user events **/
+      /* Get user events */
       this.fillCalendarWithUserEvents(this.authUser.UserId);
     }
     this.initProperties();
   }
 
-  initProperties() {
-    this.newEvent.Title = '';
-    this.newEvent.StartsAt = null;
-    this.newEvent.EndsAt = null;
+  initProperties() { 
+    this.initialState();
+  }
+
+  initialState() {
+    this.setAddState();
+  }
+
+  setAddState() {
+    this.calendarState = CalendarState.AddState;
+    this.AddEditEventTitle = "Add event:";
+    this.AddEditButton = "Add";
+    this.currentEvent.Title = ' ';
+    this.currentEvent.StartsAt = null;
+    this.currentEvent.EndsAt = null;
+  }
+
+  setEditState(event: CalendarEvent) {
+    this.calendarState = CalendarState.EditState;
+    this.AddEditEventTitle = "Edit event:";
+    this.AddEditButton = "Save";
+    this.moveToEdit();
+    this.currentEvent.Title = event.title;
+    this.currentEvent.EventId = Number(event.id);
+    this.currentEvent.StartsAt = event.start;
+    this.currentEvent.EndsAt = event.end;
+    this.currentEvent.UserId = event.meta[0];
+    this.currentEvent.Email = event.meta[1];
+  }
+
+  moveToEdit():void {
+    var element = document.getElementById("edit");
+    element.scrollIntoView();
   }
 
   getAuthUserData() {
@@ -176,7 +220,6 @@ export class CalendarComponent implements OnInit {
           },
           () => {
             console.log("Done: " + this.authUser.SessionId);
-            
           }
         );
   }
@@ -191,12 +234,12 @@ export class CalendarComponent implements OnInit {
     if (isSameMonth(date, this.viewDate)) {
       this.viewDate = date;
       if (
-        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
+        (isSameDay(this.viewDate, date) && this.ActiveDayIsOpen === true) ||
         events.length === 0
       ) {
-        this.activeDayIsOpen = false;
+        this.ActiveDayIsOpen = false;
       } else {
-        this.activeDayIsOpen = true;
+        this.ActiveDayIsOpen = true;
       }
     }
   }
@@ -214,7 +257,6 @@ export class CalendarComponent implements OnInit {
 
   handleEvent(action: string, event: CalendarEvent): void {
     if (action === "Deleted") {
-      console.log(event.id);
       this.eventsService
           .deleteEvent(Number(event.id))
           .subscribe((data: Events) => {
@@ -223,17 +265,8 @@ export class CalendarComponent implements OnInit {
               width: '200px',
               data: { message: successMessage }
             });
-            var index = 0;
-            var foundElement: boolean = false;
-            for (let element of this.events) {
-              if (element.id == event.id) 
-              {
-                foundElement = true;
-                break;
-              }
-              index++;
-            }
-            if (foundElement === true) this.events.splice(index, 1);
+            this.ActiveDayIsOpen = false;
+            this.removeEventFromView(Number(event.id));
             dialogRef.afterClosed().subscribe(result => {
               if (isPlatformBrowser(this.platformId)) {
                 this.refresh.next();
@@ -248,10 +281,14 @@ export class CalendarComponent implements OnInit {
           },
           () => {});
     }
+    else if (action === "Edited") {
+      this.setEditState(event);
+    }
   }
 
-  addEvent(): void {
-    if (!HelperHandler.CorrectAddEventInput(this.newEvent)) {
+  //* Add or updates event depends on calendar state **/
+  addEditEvent(): void {
+    if (!HelperHandler.CorrectAddEventInput(this.currentEvent)) {
       this.popUpMessage = "You did not enter everything correctly.";
       const dialogRef = this.dialog.open(SimplePopUpDialog, {
         width: '200px',
@@ -259,27 +296,29 @@ export class CalendarComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (isPlatformBrowser(this.platformId)) {
-          this.addEventButton.nativeElement.blur();
+          this.addEditEventButton.nativeElement.blur();
         }
       });
-    } else {
+    } else if (this.calendarState == CalendarState.AddState) {
       //Add event!
       this.eventsService
-          .createEvent(this.newEvent)
+          .createEvent(this.currentEvent)
           .subscribe(
             (data: Events) => {
-                this.newEvent = HelperHandler.MapDataToEvents(data);
-
+                this.currentEvent = HelperHandler.MapDataToEvents(data);
                 var successMessage: string = "Event successfuly added."
+                
                 const dialogRef = this.dialog.open(SimplePopUpDialog, {
                   width: '200px',
                   data: { message: successMessage }
                 });
                 dialogRef.afterClosed().subscribe(result => {
                   if (isPlatformBrowser(this.platformId)) {
-                    this.addEventButton.nativeElement.blur();
+                    this.addEditEventButton.nativeElement.blur();
                     this.addEventToView();
+                    this.setAddState();
                   }});
+                
             },
             err => {
               var unsuccessMessage: string = "Event was not added. " + err;
@@ -290,23 +329,64 @@ export class CalendarComponent implements OnInit {
               });
               dialogRef.afterClosed().subscribe(result => {
                 if (isPlatformBrowser(this.platformId)) {
-                  this.addEventButton.nativeElement.blur();
+                  this.addEditEventButton.nativeElement.blur();
+                  this.setAddState();
                 }});
+            },
+            () => {}
+          );
+    } else if (this.calendarState == CalendarState.EditState) {
+      //Edit event!
+      this.eventsService
+          .updateEvent(this.currentEvent)
+          .subscribe(
+            (data: Events) => {
+              this.currentEvent = HelperHandler.MapDataToEvents(data);
+              var successMessage: string = "Event successfuly edited.";
+
+              const dialogRef = this.dialog.open(SimplePopUpDialog, {
+                width: '200px',
+                data: { message: successMessage }
+              });
+              
+              dialogRef.afterClosed().subscribe(result => {
+                if (isPlatformBrowser(this.platformId)) {
+                  this.addEditEventButton.nativeElement.blur();
+                  
+                  // Remove old event details
+                  this.removeEventFromView(this.currentEvent.EventId);
+                  
+                  // Add new event details
+                  this.addEventToView();
+
+                  // Close active day
+                  this.ActiveDayIsOpen = false;
+
+                }});
+            },
+            (err) => {
+              var unsuccessMessage: string = "Event failed to be edited.";
+              const dialogRef = this.dialog.open(SimplePopUpDialog, {
+                width: '200px',
+                data: { message: unsuccessMessage }
+              });
+              dialogRef.afterClosed().subscribe(result => {
+                this.ActiveDayIsOpen = false;
+              });
             },
             () => {}
           );
     }
   }
 
-  addEventToView():void {
-    if (HelperHandler.CorrectAddEventInput(this.newEvent)) {
-      console.log("Dodajemo id " + this.newEvent.EventId);
-      HelperHandler.PrintEvent(this.newEvent);
+  addEventToView(): void {
+    if (HelperHandler.CorrectAddEventInput(this.currentEvent)) {
       this.events.push ( {
-        id: this.newEvent.EventId,
-        title: this.newEvent.Title,
-        start: this.newEvent.StartsAt,
-        end: this.newEvent.EndsAt,
+        id: this.currentEvent.EventId,
+        title: this.currentEvent.Title,
+        start: this.currentEvent.StartsAt,
+        end: this.currentEvent.EndsAt,
+        meta: [this.authUser.UserId, this.authUser.Email],
         color: colors.yellow,
         actions: this.actions,
         draggable: true,
@@ -317,6 +397,20 @@ export class CalendarComponent implements OnInit {
       });
       this.refresh.next();
     } 
+  }
+
+  removeEventFromView(eventId: number): void {
+    var index = 0;
+    var foundElement: boolean = false;
+    for (let element of this.events) {
+      if (element.id === eventId) 
+      {
+        foundElement = true;
+        break;
+      }
+      index++;
+    }
+    if (foundElement === true) this.events.splice(index, 1);
   }
 
   fillCalendarWithUserEvents(userId :number) {
@@ -339,7 +433,7 @@ export class CalendarComponent implements OnInit {
                 start: startsAt,
                 end: endsAt,
                 title: element['title'],
-                meta: element['email'],
+                meta: [element['userId'], element['email']],
                 color: colors.yellow,
                 actions: this.actions,
                 resizable: {
