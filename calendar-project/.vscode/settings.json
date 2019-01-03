@@ -1,0 +1,7 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/984458ce-0112-4266-8791-d3c5ba68176d/resourceGroups/appsvc_rg_linux_centralus/providers/Microsoft.Web/sites/calendarPWA",
+    "appService.deploySubpath": ""
+}
