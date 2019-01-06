@@ -1,0 +1,79 @@
+{
+  "configVersion": 1,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "/assets/images/calendar_clock_icon.svg",
+        "/assets/images/loader.svg",
+        "/assets/images/pencil_icon.svg",
+        "/assets/images/todo_list_icon.svg",
+        "/favicon.ico",
+        "/index.html",
+        "/main.accc0a42d8420e8ca874.js",
+        "/polyfills.20ab2d163684112c2aba.js",
+        "/runtime.ec2944dd8b20ec099bf3.js",
+        "/styles.8af3ce46f27ebed71ff3.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets/icons",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "urls": [
+        "/assets/icons/icon-128x128.png",
+        "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152.png",
+        "/assets/icons/icon-192x192.png",
+        "/assets/icons/icon-384x384.png",
+        "/assets/icons/icon-512x512.png",
+        "/assets/icons/icon-72x72.png",
+        "/assets/icons/icon-96x96.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/assets/icons/icon-128x128.png": "736c091258285481d7fc6996807194f54708b33d",
+    "/assets/icons/icon-144x144.png": "f5af999a1c8c865dde4a3ea451eb14ce49e9a5a8",
+    "/assets/icons/icon-152x152.png": "8c1a9c07bbee7ee5dd8330d97ba465c337ff769b",
+    "/assets/icons/icon-192x192.png": "b4778e8bedbea520144a65c6a53e24f96d8a72e9",
+    "/assets/icons/icon-384x384.png": "efc71a3b6769f5fc605ef84cab5b2264f06dfa35",
+    "/assets/icons/icon-512x512.png": "6c8c5a07416cc8384dad87a3fc6cb636b2fc8605",
+    "/assets/icons/icon-72x72.png": "e2d4ebaffc59bab6a85a411f1d7289993f43b9b7",
+    "/assets/icons/icon-96x96.png": "97072414d3c731798757a9c4af0e3f6e70123d8e",
+    "/assets/images/calendar_clock_icon.svg": "48c4ce01cd7ed7f16145623d4b05632d176cd392",
+    "/assets/images/loader.svg": "0871743a430d8e961266c35f50656c938341a76f",
+    "/assets/images/pencil_icon.svg": "ad4dca69d42313239d41184c9ffe40506ee46b67",
+    "/assets/images/todo_list_icon.svg": "43d9577d79e76c329e14a4c732a81ed0153ce3dd",
+    "/favicon.ico": "2519202ab11d2d9542e3200665552c4d4bd874f0",
+    "/index.html": "673954edb642c2a85ac854c623442a27cce3af1e",
+    "/main.accc0a42d8420e8ca874.js": "a00f740217ed1188a9f3f9ec1154c40edb855a16",
+    "/polyfills.20ab2d163684112c2aba.js": "ce68d153e9b9b6d26b625069c0ee99ae09c6f255",
+    "/runtime.ec2944dd8b20ec099bf3.js": "b62956c2192bfe5516d6374e753773901ed50ec5",
+    "/styles.8af3ce46f27ebed71ff3.css": "c5b6f46594d3398eeed8aec8703cf7cb4d6a31b6"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ]
+}
