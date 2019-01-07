@@ -128,6 +128,7 @@
               <tr>
                 <th>Starts at</th>
                 <td><input
+                    id="startsAtId"
                     class="form-control"
                     type="text"
                     mwlFlatpickr
@@ -136,12 +137,14 @@
                     [enableTime]="true"
                     [(ngModel)]="currentEvent.StartsAt"
                     dateFormat="Y-m-dTH:i"
-                    placeholder="Not set">
+                    placeholder="Not set"
+                    (click)=startsAtClicked()>
                 </td>
               </tr>
               <tr>
                 <th>Ends at</th>
                 <td><input
+                  id="endsAtId"
                   class="form-control ends-at"
                   type="text"
                   mwlFlatpickr
@@ -150,7 +153,8 @@
                   [enableTime]="true"
                   [(ngModel)]="currentEvent.EndsAt"
                   dateFormat="Y-m-dTH:i"
-                  placeholder="Not set">
+                  placeholder="Not set"
+                  (click)=endsAtClicked()>
                 </td>
               </tr>
             </table>

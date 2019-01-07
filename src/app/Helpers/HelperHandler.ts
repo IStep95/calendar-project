@@ -3,6 +3,7 @@ import { Events } from "../Model/Events";
 import { StringHandler } from '../Helpers/StringHandler';
 
 export class HelperHandler {
+
     public static PrintUser(user: Users): void
     {
         console.log("user id: " + user.UserId);

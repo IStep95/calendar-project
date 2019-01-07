@@ -16,4 +16,6 @@ export class Constants {
 
     public static AUTHENTICATED_USER_KEY: string = "Authenticated user";
 
+    public static MOVE_TO_BOTTOM_PAGE_KEY: string = "Move to bottom";
+
 } 

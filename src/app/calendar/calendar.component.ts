@@ -6,13 +6,14 @@ import { Component,
          TemplateRef,
          Inject,
          ElementRef,
-         PLATFORM_ID
+         PLATFORM_ID,
+         AfterContentInit
         } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { isPlatformBrowser } from '@angular/common';
-import { setImmediate } from 'setImmediate';
+import { NgZone } from '@angular/core';
 
 import { AuthenticationService } from '../authentication.service';
 import { EventsService } from '../events.service';
@@ -20,9 +21,6 @@ import { Users } from '../Model/Users';
 import { Events } from '../Model/Events';
 import { HelperHandler } from '../Helpers/HelperHandler';
 import { CalendarState } from '../calendar-state';
-
-import { of } from 'rxjs';
-
 
 
 import {
@@ -41,9 +39,7 @@ import { CalendarEvent,
          CalendarEventAction,
          CalendarEventTimesChangedEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
-import { StringHandler } from '../Helpers/StringHandler';
 import { Constants } from '../Constants';
-import { strictEqual } from 'assert';
 //#endregion
 
 const colors: any = {
@@ -73,6 +69,8 @@ export class CalendarComponent implements OnInit {
   @ViewChild('modalContent')
   @ViewChild('addEventId') addEditEventButton: ElementRef;
   @ViewChild('info') edit: ElementRef;
+  @ViewChild('startsAtId') startsAtInput: ElementRef;
+  @ViewChild('endsAtId') endsAtInput: ElementRef;
 
   modalContent: TemplateRef<any>;
   title: string = "Calendar";
@@ -84,6 +82,7 @@ export class CalendarComponent implements OnInit {
   AddEditEventTitle: string; 
   AddEditButton: string;
   calendarState:CalendarState;
+  firstLoad: boolean = true;
 
   modalData: {
     action: string;
@@ -119,7 +118,6 @@ export class CalendarComponent implements OnInit {
 
     this.activeDayIsOpen = value;
   }
-
   //#endregion
 
 
@@ -127,7 +125,8 @@ export class CalendarComponent implements OnInit {
               private router: Router, private modal: NgbModal, 
               public dialog: MatDialog,
               @Inject(PLATFORM_ID) private platformId: Object,
-              private eventsService: EventsService) {
+              private eventsService: EventsService,
+              private ngZone: NgZone) {
               
               /* Check user authentication */
               if (!this.isUserAuthenticated) {
@@ -142,6 +141,7 @@ export class CalendarComponent implements OnInit {
               
               if (this.authUser != null) this.getAuthUserData();
               this.initProperties();
+
   }
   
   ngOnInit() {
@@ -167,15 +167,44 @@ export class CalendarComponent implements OnInit {
       /* Get user events */
       this.fillCalendarWithUserEvents(this.authUser.UserId);
     }
+    
+    this.handleOnStartBackButton();
+
     this.initProperties();
+
   }
 
   initProperties() { 
     this.initialState();
+
+    window.onpopstate = function(event) {
+      var startsAtActive = document.getElementById('startsAtId') === document.activeElement;
+      var endsAtActive = document.getElementById('endsAtId') === document.activeElement;
+      if (startsAtActive || endsAtActive) {
+        var elements = document.getElementsByClassName('flatpickr-calendar');
+        console.log("onpopstate");
+        for(var i=0; i<elements.length; i++)
+        {
+            elements[i].classList.remove("open");
+        }
+        
+        window.history.pushState({}, '');
+      }
+      return false;
+    }
   }
 
   initialState() {
     this.setAddState();
+  }
+
+  handleOnStartBackButton()
+  {
+      /* Handle back button pressed on starts at or ends at open */
+      if (this.firstLoad === true) {
+        window.history.pushState({}, '');
+        this.firstLoad = false;
+      }    
   }
 
   setAddState() {
@@ -253,6 +282,7 @@ export class CalendarComponent implements OnInit {
     event.end = newEnd;
     this.handleEvent('Dropped or resized', event);
     this.refresh.next();
+    console.log("da");
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
@@ -459,6 +489,17 @@ export class CalendarComponent implements OnInit {
           }
         );
   }
+
+  startsAtClicked() {
+    var elements = document.getElementsByClassName('flatpickr-calendar');
+    elements[0].classList.add("open");
+  }
+
+  endsAtClicked() {
+    var elements = document.getElementsByClassName('flatpickr-calendar');
+    elements[1].classList.add("open");
+  }
+
   //#endregion
 }
 

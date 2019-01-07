@@ -7,7 +7,6 @@ import { LoginService } from '../login.service';
 import { HelperHandler } from '../Helpers/HelperHandler';
 import { Constants } from '../Constants';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
