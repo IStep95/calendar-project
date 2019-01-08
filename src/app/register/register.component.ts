@@ -72,6 +72,7 @@ export class RegisterComponent implements OnInit {
 
   private initProperties() {
     this.initUser();
+    HelperHandler.EnableScrolling();
   }
 
   private initUser() {

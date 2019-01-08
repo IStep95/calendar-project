@@ -18,7 +18,7 @@ import { PlacementArray } from 'positioning';
       let-eventClicked="eventClicked"
       let-tooltipTemplate="tooltipTemplate"
       let-tooltipAppendToBody="tooltipAppendToBody"
-    >
+      >
       <div
         class="cal-event"
         [style.backgroundColor]="dayEvent.event.color?.secondary"
@@ -32,18 +32,20 @@ import { PlacementArray } from 'positioning';
         [tooltipAppendToBody]="tooltipAppendToBody"
         (mwlClick)="eventClicked.emit()"
       >
-        <mwl-calendar-event-actions
-          [event]="dayEvent.event"
-          [customTemplate]="eventActionsTemplate"
-        >
-        </mwl-calendar-event-actions>
-        &ngsp;
-        <mwl-calendar-event-title
-          [event]="dayEvent.event"
-          [customTemplate]="eventTitleTemplate"
-          view="day"
-        >
-        </mwl-calendar-event-title>
+
+      <mwl-calendar-event-title
+        [event]="dayEvent.event"
+        [customTemplate]="eventTitleTemplate"
+        view="day"
+      >
+      </mwl-calendar-event-title>
+      <br />
+      <mwl-calendar-event-actions
+        [event]="dayEvent.event"
+        [customTemplate]="eventActionsTemplate"
+      >
+      </mwl-calendar-event-actions>
+  
       </div>
     </ng-template>
     <ng-template

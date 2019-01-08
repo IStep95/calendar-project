@@ -6,6 +6,7 @@ import { StringHandler } from '../Helpers/StringHandler';
 import { LoginService } from '../login.service';
 import { HelperHandler } from '../Helpers/HelperHandler';
 import { Constants } from '../Constants';
+import { setStyles } from '@angular/animations/browser/src/util';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
   isLoaderIconVisible: boolean = false;
 
   constructor(private loginService: LoginService,
-              public router: Router) { }
+              public router: Router) { 
+  }
 
   ngOnInit() {
     this.initProperties();
@@ -97,6 +99,7 @@ export class LoginComponent implements OnInit {
     this.currentUser.Email = '';
     this.currentUser.EnteredPassword = '';
     this.isLoaderIconVisible = false;
+    HelperHandler.DisableScrolling();
     localStorage.clear();
   }
 

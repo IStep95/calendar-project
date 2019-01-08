@@ -487,6 +487,10 @@
   border-color: transparent;
   border-style: solid; }
 
+  .isWebView {
+    background: black;
+  }
+
   @media(max-width: 770px) {
     .web-view {
       visibility: hidden;

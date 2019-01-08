@@ -65,4 +65,28 @@ export class HelperHandler {
         
         return correctInput;
       }
+
+    public static EnableScrolling(): void {
+        var htmlElement = document.getElementsByTagName('html');
+        if (htmlElement.length == 1) {
+        htmlElement[0].style.setProperty("overflow", "auto");
+        }
+        
+        var bodyElement = document.getElementsByTagName('body');
+        if (bodyElement.length == 1) {
+        bodyElement[0].style.setProperty("overflow", "auto");
+        }
+    }
+
+    public static DisableScrolling(): void {
+        var htmlElement = document.getElementsByTagName('html');
+        if (htmlElement.length == 1) {
+        htmlElement[0].style.setProperty("overflow", "hidden");
+        }
+
+        var bodyElement = document.getElementsByTagName('body');
+        if (bodyElement.length == 1) {
+        bodyElement[0].style.setProperty("overflow", "hidden");
+        }
+    }
 }

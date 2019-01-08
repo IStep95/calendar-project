@@ -24,9 +24,6 @@
     margin-top: 4%;
   }
 
-  body    {overflow-y:scroll;}
-
-
   /** angular-calendar.css **/
 .cal-month-view .cal-header {
   text-align: center;
@@ -372,11 +369,7 @@
 
 .cal-day-view {
   /* stylelint-disable-next-line selector-type-no-unknown */ }
-  .cal-day-view .cal-hour-rows {
-    width: 100%;
-    border: solid 1px #e1e1e1;
-    overflow-x: scroll;
-    position: relative; }
+  
   .cal-day-view .cal-hour:nth-child(odd) {
     background-color: #fafafa; }
   .cal-day-view mwl-calendar-day-view-hour-segment,
@@ -534,7 +527,51 @@
 
     }
 
+    .day-view-web {
+      visibility: hidden;
+      height: 0px;
+    }
+
+    .day-view-mobile {
+      visibility: visible;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .first-column {
+      width: 100%;
+    }
+
+    .second-column {
+      width: 100%;
+    }
+
+    .cal-day-view .cal-hour-rows {
+      width: 45%;
+      border: solid 1px #e1e1e1;
+      overflow-x: scroll;
+      position: relative;
+      display: inline-block;
+      overflow-y: hidden;
+    }
+
+    .cal-time {
+      font-size: 12px;
+    }
+    
+    .cal-hour-rows-second {
+      display: inline-block;
+      width: 45%;
+      border: solid 1px #e1e1e1;
+      overflow-x: scroll;
+      position: relative;
+      overflow-y: hidden;
+    }
+
+
   }
+
+
 
   @media(min-width: 770px) {
     .web-view {
@@ -544,7 +581,30 @@
       visibility: hidden;
       height: 0px;
     }
+    
+    .day-view-web {
+      visibility: visible;
+    }
 
+    .day-view-mobile {
+      visibility: hidden;
+      height: 0px;
+    }
+
+    .cal-day-view-width {
+      width: 100%;
+    }
+
+    .day-view-hour-segment-width {
+      width: 100%;
+    }
+
+
+    .cal-day-view .cal-hour-rows {
+      width: 100%;
+      border: solid 1px #e1e1e1;
+      overflow-x: scroll;
+      position: relative; }
   }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

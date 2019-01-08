@@ -1062,7 +1062,14 @@ export class CalendarWeekViewComponent implements OnChanges, OnInit, OnDestroy {
             height: 0,
             width: 0,
             startsBeforeDay: false,
-            endsAfterDay: false
+            endsAfterDay: false,
+            topFirst: 0,
+            topSecond: 0,
+            heightFirst: 0,
+            heightSecond: 0,
+            mobileLeft: 0,
+            firstColumnVisible: "visible",
+            secondColumnVisible: "visible"
           });
         }
       });

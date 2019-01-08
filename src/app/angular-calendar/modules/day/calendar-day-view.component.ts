@@ -9,7 +9,9 @@ import {
   Inject,
   OnInit,
   OnDestroy,
-  TemplateRef
+  TemplateRef,
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {
   CalendarEvent,
@@ -44,6 +46,7 @@ import {
 import { DateAdapter } from '../../date-adapters/date-adapter';
 import { DragEndEvent } from 'angular-draggable-droppable';
 import { PlacementArray } from 'positioning';
+import { CalendarEventTitleComponent } from '../common/calendar-event-title.component';
 
 export interface CalendarDayViewBeforeRenderEvent {
   body: {
@@ -59,6 +62,12 @@ export interface CalendarDayViewBeforeRenderEvent {
 export interface DayViewEventResize {
   originalTop: number;
   originalHeight: number;
+
+  /**Added stepanic */
+  originalTopFirst: number;
+  originalTopSecond: number;
+  originalHeightFirst: number;
+  originalHeightSecond: number;
   edge: string;
 }
 
@@ -75,7 +84,7 @@ export interface DayViewEventResize {
 @Component({
   selector: 'mwl-calendar-day-view',
   template: `
-    <div class="cal-day-view">
+    <div class="cal-day-view day-view-web">
       <div
         class="cal-all-day-events"
         mwlDroppable
@@ -105,6 +114,7 @@ export interface DayViewEventResize {
         >
         </mwl-calendar-day-view-event>
       </div>
+      
       <div
         class="cal-hour-rows"
         #dayEventsContainer
@@ -203,6 +213,86 @@ export interface DayViewEventResize {
         </div>
       </div>
     </div>
+
+
+    <div id="dayViewMobileId" class="cal-day-view day-view-mobile">
+
+      <div class="cal-hour-rows">
+          <div class="cal-hour first-column"
+            *ngFor="let hour of hours | slice:0:12; trackBy: trackByHour"
+            [style.minWidth.px]="view?.width + 50">
+            <mwl-calendar-day-view-hour-segment
+              *ngFor="let segment of hour.segments; trackBy: trackByHourSegment"
+              [style.height.px]="hourSegmentHeight"
+              [segment]="segment"
+              [segmentHeight]="hourSegmentHeight"
+              [locale]="locale"
+              [customTemplate]="hourSegmentTemplate"
+              (mwlClick)="hourSegmentClicked.emit({ date: segment.date })">
+            </mwl-calendar-day-view-hour-segment>
+          </div>
+          <div #event
+              *ngFor="let dayEvent of view?.events; trackBy: trackByDayEvent"
+              class="cal-event-container"
+              [class.cal-draggable]="dayEvent.event.draggable"
+              [class.cal-starts-within-day]="!dayEvent.startsBeforeDay"
+              [class.cal-ends-within-day]="!dayEvent.endsAfterDay"
+              [ngClass]="dayEvent.event.cssClass"
+              [style.marginTop.px]="dayEvent.topFirst"
+              [style.height.px]="dayEvent.heightFirst"
+              [style.visibility]="dayEvent.firstColumnVisible"
+              [style.marginLeft.px]="70"
+              [style.width.px]="dayEvent.width - 1">
+
+              <mwl-calendar-day-view-event
+                [dayEvent]="dayEvent"
+                [customTemplate]="eventTemplate"
+                [eventTitleTemplate]="eventTitleTemplate"
+                [eventActionsTemplate]="eventActionsTemplate"
+                [style.visibility]="dayEvent.firstColumnVisible"
+                (eventClicked)="eventClicked.emit({ event: dayEvent.event })">
+              </mwl-calendar-day-view-event>
+          </div>
+      </div>
+        
+      <div class="cal-hour-rows-second pull-right">
+          <div class="cal-hour second-column"
+            *ngFor="let hour of hours | slice:12:24; trackBy: trackByHour"
+            [style.minWidth.px]="view?.width + 50">
+            <mwl-calendar-day-view-hour-segment
+              *ngFor="let segment of hour.segments; trackBy: trackByHourSegment"
+              [style.height.px]="hourSegmentHeight"
+              [segment]="segment"
+              [segmentHeight]="hourSegmentHeight"
+              [locale]="locale"
+              [customTemplate]="hourSegmentTemplate"
+              (mwlClick)="hourSegmentClicked.emit({ date: segment.date })">
+            </mwl-calendar-day-view-hour-segment>
+        </div>
+        <div #event
+              *ngFor="let dayEvent of view?.events; trackBy: trackByDayEvent"
+              class="cal-event-container"
+              [class.cal-draggable]="dayEvent.event.draggable"
+              [class.cal-starts-within-day]="!dayEvent.startsBeforeDay"
+              [class.cal-ends-within-day]="!dayEvent.endsAfterDay"
+              [ngClass]="dayEvent.event.cssClass"
+              [style.marginTop.px]="dayEvent.topSecond"
+              [style.height.px]="dayEvent.heightSecond"
+              [style.visibility]="dayEvent.secondColumnVisible"
+              [style.marginLeft.px]="70"
+              [style.width.px]="dayEvent.width - 1">
+
+              <mwl-calendar-day-view-event
+                [dayEvent]="dayEvent"
+                [customTemplate]="eventTemplate"
+                [eventTitleTemplate]="eventTitleTemplate"
+                [eventActionsTemplate]="eventActionsTemplate"
+                [style.visibility]="dayEvent.secondColumnVisible"
+                (eventClicked)="eventClicked.emit({ event: dayEvent.event })">
+              </mwl-calendar-day-view-event>
+          </div>
+      </div>
+    </div>
   `
 })
 export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
@@ -250,7 +340,7 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
   /**
    * The width in pixels of each event on the view
    */
-  @Input() eventWidth: number = 150;
+  @Input() eventWidth: number = 76;
 
   /**
    * An observable that when emitted on will re-render the current view
@@ -401,6 +491,9 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
    */
   trackByDayEvent = trackByDayOrWeekEvent;
 
+
+  @ViewChild('dayViewMobileId') dayViewMobileId: ElementRef;
+
   /**
    * @hidden
    */
@@ -486,9 +579,63 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
     resizeEvent: ResizeEvent,
     dayEventsContainer: HTMLElement
   ): void {
+
+    //var MOBILE_COLUMN_HEGHT = this.dayViewMobileId.nativeElement.offsetHeight;
+    
+    var MOBILE_COLUMN_HEGHT = document.getElementById("dayViewMobileId").offsetHeight;
+
+    if (MOBILE_COLUMN_HEGHT < 722) {
+      MOBILE_COLUMN_HEGHT = 722;
+    }
+
+    console.log("resizeStarted");
+    /** Case 1 */
+    if (event.top < MOBILE_COLUMN_HEGHT && (event.top + event.height) < MOBILE_COLUMN_HEGHT) {
+      event.topFirst = event.top;
+      event.topSecond = 0;
+      event.heightFirst = event.height;
+      event.heightSecond = 0;
+    } 
+    /** Case 2 */
+    else if (event.top < MOBILE_COLUMN_HEGHT && (event.top + event.height) >= MOBILE_COLUMN_HEGHT) {
+      event.topFirst = event.top;
+      event.topSecond = 0;
+      event.heightFirst = MOBILE_COLUMN_HEGHT - event.top;
+      event.heightSecond = event.height - event.heightFirst;
+    }
+    /** Case 3 */
+    else if (event.top >= MOBILE_COLUMN_HEGHT && (event.top + event.height) < MOBILE_COLUMN_HEGHT) {
+      event.topFirst = MOBILE_COLUMN_HEGHT;
+      event.topSecond = event.top - MOBILE_COLUMN_HEGHT;
+      event.heightFirst = 0;
+      event.heightSecond = event.height;
+    }
+    /** Case 4 */
+    else if (event.top >= MOBILE_COLUMN_HEGHT && (event.top + event.height) >= MOBILE_COLUMN_HEGHT) {
+      event.topFirst = MOBILE_COLUMN_HEGHT;
+      event.topSecond = event.top - MOBILE_COLUMN_HEGHT;
+      event.heightFirst = 0;
+      event.heightSecond = MOBILE_COLUMN_HEGHT - event.topSecond;
+    }
+
+    if (event.heightFirst > 0) {
+      event.firstColumnVisible = "visible";
+    } else {
+      event.firstColumnVisible = "hidden";
+    }
+    if (event.heightSecond > 0) {
+      event.secondColumnVisible = "visible";
+    } else {
+      event.secondColumnVisible = "hidden";
+    }
+
     this.currentResizes.set(event, {
       originalTop: event.top,
       originalHeight: event.height,
+      originalTopFirst: event.topFirst,
+      originalTopSecond: event.topSecond,
+      originalHeightFirst: event.heightFirst,
+      originalHeightSecond: event.heightSecond,
       edge: typeof resizeEvent.edges.top !== 'undefined' ? 'top' : 'bottom'
     });
     const resizeHelper: CalendarResizeHelper = new CalendarResizeHelper(
@@ -501,9 +648,11 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
 
   resizing(event: DayViewEvent, resizeEvent: ResizeEvent): void {
     const currentResize: DayViewEventResize = this.currentResizes.get(event);
+    console.log("resizing");
     if (resizeEvent.edges.top) {
       event.top = currentResize.originalTop + +resizeEvent.edges.top;
       event.height = currentResize.originalHeight - +resizeEvent.edges.top;
+
     } else if (resizeEvent.edges.bottom) {
       event.height = currentResize.originalHeight + +resizeEvent.edges.bottom;
     }
@@ -511,7 +660,7 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
 
   resizeEnded(dayEvent: DayViewEvent): void {
     const currentResize: DayViewEventResize = this.currentResizes.get(dayEvent);
-
+    console.log("resizeEnded");
     const resizingBeforeStart = currentResize.edge === 'top';
     let pixelsMoved: number;
     if (resizingBeforeStart) {
@@ -521,6 +670,7 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     dayEvent.top = currentResize.originalTop;
+
     dayEvent.height = currentResize.originalHeight;
 
     const minutesMoved = getMinutesMoved(
@@ -619,6 +769,7 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private refreshView(): void {
+  
     this.view = this.utils.getDayView({
       events: this.events,
       viewDate: this.viewDate,
@@ -634,7 +785,76 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
       eventWidth: this.eventWidth,
       segmentHeight: this.hourSegmentHeight
     });
+    
+    this.calculateMobileValues();
+
     this.emitBeforeViewRender();
+  }
+
+  private calculateMobileValues(): void {
+    
+    this.view.events.forEach(event => {
+
+      //var MOBILE_COLUMN_HEGHT = this.dayViewMobileId.nativeElement.offsetHeight;
+      var MOBILE_COLUMN_HEGHT = document.getElementById("dayViewMobileId").offsetTop;
+      console.log("Procitana visina " + MOBILE_COLUMN_HEGHT);
+
+      if (MOBILE_COLUMN_HEGHT < 722) {
+        MOBILE_COLUMN_HEGHT = 722;
+      }
+      console.log("Visina " + MOBILE_COLUMN_HEGHT);
+
+      /* Substracting by MOBILE_COLUMN_HEIGHT HACK, should be 0 in every case where margin top should be 0*/
+      const TRESH_HOLD: number = (MOBILE_COLUMN_HEGHT - 3);
+
+
+      /** Case 1 */
+      if (event.top < MOBILE_COLUMN_HEGHT && (event.top + event.height) < MOBILE_COLUMN_HEGHT) {
+        event.topFirst = event.top - TRESH_HOLD;
+        event.topSecond = 0 - TRESH_HOLD;
+        event.heightFirst = event.height;
+        event.heightSecond = 0;
+      } 
+      /** Case 2 */
+      else if (event.top < MOBILE_COLUMN_HEGHT && (event.top + event.height) >= MOBILE_COLUMN_HEGHT) {
+        event.topFirst = event.top - TRESH_HOLD;
+        event.topSecond = 0 - TRESH_HOLD;
+        event.heightFirst = MOBILE_COLUMN_HEGHT - event.top;
+        event.heightSecond = event.height - event.heightFirst;
+      }
+      /** Case 3 */
+      else if (event.top >= MOBILE_COLUMN_HEGHT && (event.top + event.height) < MOBILE_COLUMN_HEGHT) {
+        //event.topFirst = MOBILE_COLUMN_HEGHT;
+        event.topFirst = 0 - TRESH_HOLD;
+        event.topSecond = event.top - MOBILE_COLUMN_HEGHT - TRESH_HOLD;
+        event.heightFirst = 0;
+        event.heightSecond = event.height;
+      }
+      /** Case 4 */
+      else if (event.top >= MOBILE_COLUMN_HEGHT && (event.top + event.height) >= MOBILE_COLUMN_HEGHT) {
+        //event.topFirst = MOBILE_COLUMN_HEGHT;
+        event.topFirst = 0 - TRESH_HOLD;
+        event.topSecond = event.top - MOBILE_COLUMN_HEGHT - TRESH_HOLD;
+        event.heightFirst = 0;
+        event.heightSecond = MOBILE_COLUMN_HEGHT - event.topSecond;
+      }
+
+      if (event.heightFirst > 0) {
+        event.firstColumnVisible = "visible";
+      } else {
+        event.firstColumnVisible = "hidden";
+      }
+      if (event.heightSecond > 0) {
+        event.secondColumnVisible = "visible";
+      } else {
+        event.secondColumnVisible = "hidden";
+      }
+
+    });
+  }
+
+  public RefreshAll(): void {
+    this.refreshAll();
   }
 
   private refreshAll(): void {

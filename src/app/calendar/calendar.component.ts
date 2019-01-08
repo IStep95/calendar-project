@@ -40,6 +40,7 @@ import { CalendarEvent,
          CalendarEventTimesChangedEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
 import { Constants } from '../Constants';
+import { CalendarDayViewComponent } from '../angular-calendar';
 //#endregion
 
 const colors: any = {
@@ -74,7 +75,7 @@ export class CalendarComponent implements OnInit {
 
   modalContent: TemplateRef<any>;
   title: string = "Calendar";
-  view: CalendarView = CalendarView.Month;
+  view: CalendarView = CalendarView.Day;
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   currentEvent: Events = new Events();
@@ -176,18 +177,16 @@ export class CalendarComponent implements OnInit {
 
   initProperties() { 
     this.initialState();
-
+    HelperHandler.EnableScrolling();
     window.onpopstate = function(event) {
       var startsAtActive = document.getElementById('startsAtId') === document.activeElement;
       var endsAtActive = document.getElementById('endsAtId') === document.activeElement;
       if (startsAtActive || endsAtActive) {
         var elements = document.getElementsByClassName('flatpickr-calendar');
-        console.log("onpopstate");
-        for(var i=0; i<elements.length; i++)
+        for(var i=0; i < elements.length; i++)
         {
             elements[i].classList.remove("open");
         }
-        
         window.history.pushState({}, '');
       }
       return false;
@@ -282,7 +281,6 @@ export class CalendarComponent implements OnInit {
     event.end = newEnd;
     this.handleEvent('Dropped or resized', event);
     this.refresh.next();
-    console.log("da");
   }
 
   handleEvent(action: string, event: CalendarEvent): void {

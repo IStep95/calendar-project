@@ -11,12 +11,11 @@ import { DayViewHourSegment } from 'calendar-utils';
       let-segmentHeight="segmentHeight"
     >
       <div
-        class="cal-hour-segment"
+        class="cal-hour-segment day-view-hour-segment-width"
         [style.height.px]="segmentHeight"
         [class.cal-hour-start]="segment.isStart"
         [class.cal-after-hour-start]="!segment.isStart"
-        [ngClass]="segment.cssClass"
-      >
+        [ngClass]="segment.cssClass">
         <div class="cal-time">
           {{ segment.date | calendarDate: 'dayViewHour':locale }}
         </div>
