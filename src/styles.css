@@ -546,7 +546,7 @@
       width: 100%;
     }
 
-    .cal-day-view .cal-hour-rows {
+    .cal-day-view .cal-hour-rows-first {
       width: 45%;
       border: solid 1px #e1e1e1;
       overflow-x: scroll;
@@ -595,14 +595,18 @@
       width: 100%;
     }
 
-    .day-view-hour-segment-width {
-      width: 100%;
+    .cal-hour-rows-first {
+      height: 0px;
     }
 
+    .cal-hour-rows-second {
+      height: 0px;
+    }
 
     .cal-day-view .cal-hour-rows {
       width: 100%;
       border: solid 1px #e1e1e1;
+      display: block;
       overflow-x: scroll;
       position: relative; }
   }

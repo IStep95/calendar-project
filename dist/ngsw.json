@@ -13,10 +13,10 @@
         "/assets/images/todo_list_icon.svg",
         "/favicon.ico",
         "/index.html",
-        "/main.233ec928488ee7cc9902.js",
+        "/main.6279123a73a0b944d935.js",
         "/polyfills.20ab2d163684112c2aba.js",
         "/runtime.ec2944dd8b20ec099bf3.js",
-        "/styles.c55248d3125ed89f0407.css"
+        "/styles.ddc7c2f80cf5e0c435f5.css"
       ],
       "patterns": []
     },
@@ -52,11 +52,11 @@
     "/assets/images/pencil_icon.svg": "ad4dca69d42313239d41184c9ffe40506ee46b67",
     "/assets/images/todo_list_icon.svg": "43d9577d79e76c329e14a4c732a81ed0153ce3dd",
     "/favicon.ico": "2519202ab11d2d9542e3200665552c4d4bd874f0",
-    "/index.html": "3d91888dd8583327033a543e4df71ddc235cda7d",
-    "/main.233ec928488ee7cc9902.js": "406df0ccde3a640d906a96bd9acbdc7acbe04a74",
+    "/index.html": "9632dce53dfaca75605e47fc52f59ba17e01b341",
+    "/main.6279123a73a0b944d935.js": "1053fdf6800ed76f2e9ee672306adbdc1df847d5",
     "/polyfills.20ab2d163684112c2aba.js": "ce68d153e9b9b6d26b625069c0ee99ae09c6f255",
     "/runtime.ec2944dd8b20ec099bf3.js": "b62956c2192bfe5516d6374e753773901ed50ec5",
-    "/styles.c55248d3125ed89f0407.css": "d80816e48e84ca6f0a17ce9fd2950521d8d5b0fb"
+    "/styles.ddc7c2f80cf5e0c435f5.css": "0e8088742c3461a193d12ad717b93c893d1d338d"
   },
   "navigationUrls": [
     {

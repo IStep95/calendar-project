@@ -11,7 +11,8 @@ import {
   OnDestroy,
   TemplateRef,
   ElementRef,
-  ViewChild
+  ViewChild,
+  HostListener
 } from '@angular/core';
 import {
   CalendarEvent,
@@ -103,14 +104,6 @@ export interface DayViewEventResize {
           [eventTitleTemplate]="eventTitleTemplate"
           [eventActionsTemplate]="eventActionsTemplate"
           (eventClicked)="eventClicked.emit({ event: event })"
-          [class.cal-draggable]="!snapDraggedEvents && event.draggable"
-          mwlDraggable
-          dragActiveClass="cal-drag-active"
-          [dropData]="{ event: event, calendarId: calendarId }"
-          [dragAxis]="{
-            x: !snapDraggedEvents && event.draggable,
-            y: !snapDraggedEvents && event.draggable
-          }"
         >
         </mwl-calendar-day-view-event>
       </div>
@@ -131,29 +124,6 @@ export interface DayViewEventResize {
             [class.cal-starts-within-day]="!dayEvent.startsBeforeDay"
             [class.cal-ends-within-day]="!dayEvent.endsAfterDay"
             [ngClass]="dayEvent.event.cssClass"
-            mwlResizable
-            [resizeSnapGrid]="{
-              top: eventSnapSize || hourSegmentHeight,
-              bottom: eventSnapSize || hourSegmentHeight
-            }"
-            [validateResize]="validateResize"
-            (resizeStart)="resizeStarted(dayEvent, $event, dayEventsContainer)"
-            (resizing)="resizing(dayEvent, $event)"
-            (resizeEnd)="resizeEnded(dayEvent)"
-            mwlDraggable
-            dragActiveClass="cal-drag-active"
-            [dropData]="{ event: dayEvent.event, calendarId: calendarId }"
-            [dragAxis]="{
-              x:
-                !snapDraggedEvents &&
-                dayEvent.event.draggable &&
-                currentResizes.size === 0,
-              y: dayEvent.event.draggable && currentResizes.size === 0
-            }"
-            [dragSnapGrid]="
-              snapDraggedEvents ? { y: eventSnapSize || hourSegmentHeight } : {}
-            "
-            [validateDrag]="validateDrag"
             (dragPointerDown)="dragStarted(event, dayEventsContainer)"
             (dragEnd)="dragEnded(dayEvent, $event)"
             [style.marginTop.px]="dayEvent.top"
@@ -161,15 +131,6 @@ export interface DayViewEventResize {
             [style.marginLeft.px]="dayEvent.left + 70"
             [style.width.px]="dayEvent.width - 1"
           >
-            <div
-              class="cal-resize-handle cal-resize-handle-before-start"
-              *ngIf="
-                dayEvent.event?.resizable?.beforeStart &&
-                !dayEvent.startsBeforeDay
-              "
-              mwlResizeHandle
-              [resizeEdges]="{ top: true }"
-            ></div>
             <mwl-calendar-day-view-event
               [dayEvent]="dayEvent"
               [tooltipPlacement]="tooltipPlacement"
@@ -181,14 +142,6 @@ export interface DayViewEventResize {
               (eventClicked)="eventClicked.emit({ event: dayEvent.event })"
             >
             </mwl-calendar-day-view-event>
-            <div
-              class="cal-resize-handle cal-resize-handle-after-end"
-              *ngIf="
-                dayEvent.event?.resizable?.afterEnd && !dayEvent.endsAfterDay
-              "
-              mwlResizeHandle
-              [resizeEdges]="{ bottom: true }"
-            ></div>
           </div>
         </div>
         <div
@@ -204,20 +157,14 @@ export interface DayViewEventResize {
             [locale]="locale"
             [customTemplate]="hourSegmentTemplate"
             (mwlClick)="hourSegmentClicked.emit({ date: segment.date })"
-            mwlDroppable
-            dragOverClass="cal-drag-over"
-            dragActiveClass="cal-drag-active"
-            (drop)="eventDropped($event, segment.date, false)"
           >
           </mwl-calendar-day-view-hour-segment>
         </div>
       </div>
     </div>
-
-
     <div id="dayViewMobileId" class="cal-day-view day-view-mobile">
 
-      <div class="cal-hour-rows">
+      <div id="calHourRowsId" class="cal-hour-rows-first">
           <div class="cal-hour first-column"
             *ngFor="let hour of hours | slice:0:12; trackBy: trackByHour"
             [style.minWidth.px]="view?.width + 50">
@@ -574,6 +521,16 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  screenHeight: number = window.innerHeight;
+  screenWidth: number = window.innerWidth;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    this.refreshView();
+  }
+
   resizeStarted(
     event: DayViewEvent,
     resizeEvent: ResizeEvent,
@@ -618,16 +575,23 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
       event.heightSecond = MOBILE_COLUMN_HEGHT - event.topSecond;
     }
 
-    if (event.heightFirst > 0) {
-      event.firstColumnVisible = "visible";
+    if (this.screenHeight < 720) {
+      if (event.heightFirst > 0) {
+        event.firstColumnVisible = "visible";
+      } else {
+        event.firstColumnVisible = "hidden";
+      }
+      if (event.heightSecond > 0) {
+        event.secondColumnVisible = "visible";
+      } else {
+        event.secondColumnVisible = "hidden";
+      }
     } else {
       event.firstColumnVisible = "hidden";
-    }
-    if (event.heightSecond > 0) {
-      event.secondColumnVisible = "visible";
-    } else {
       event.secondColumnVisible = "hidden";
+      document.getElementById("calHourRowsId").style.height = "0px";
     }
+    
 
     this.currentResizes.set(event, {
       originalTop: event.top,
@@ -797,16 +761,13 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
 
       //var MOBILE_COLUMN_HEGHT = this.dayViewMobileId.nativeElement.offsetHeight;
       var MOBILE_COLUMN_HEGHT = document.getElementById("dayViewMobileId").offsetTop;
-      console.log("Procitana visina " + MOBILE_COLUMN_HEGHT);
 
       if (MOBILE_COLUMN_HEGHT < 722) {
         MOBILE_COLUMN_HEGHT = 722;
       }
-      console.log("Visina " + MOBILE_COLUMN_HEGHT);
 
       /* Substracting by MOBILE_COLUMN_HEIGHT HACK, should be 0 in every case where margin top should be 0*/
       const TRESH_HOLD: number = (MOBILE_COLUMN_HEGHT - 3);
-
 
       /** Case 1 */
       if (event.top < MOBILE_COLUMN_HEGHT && (event.top + event.height) < MOBILE_COLUMN_HEGHT) {
@@ -839,14 +800,19 @@ export class CalendarDayViewComponent implements OnChanges, OnInit, OnDestroy {
         event.heightSecond = MOBILE_COLUMN_HEGHT - event.topSecond;
       }
 
-      if (event.heightFirst > 0) {
-        event.firstColumnVisible = "visible";
+      if (this.screenHeight < 720) {
+        if (event.heightFirst > 0) {
+          event.firstColumnVisible = "visible";
+        } else {
+          event.firstColumnVisible = "hidden";
+        }
+        if (event.heightSecond > 0) {
+          event.secondColumnVisible = "visible";
+        } else {
+          event.secondColumnVisible = "hidden";
+        }
       } else {
         event.firstColumnVisible = "hidden";
-      }
-      if (event.heightSecond > 0) {
-        event.secondColumnVisible = "visible";
-      } else {
         event.secondColumnVisible = "hidden";
       }
 
