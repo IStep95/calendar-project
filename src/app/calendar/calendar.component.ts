@@ -75,7 +75,7 @@ export class CalendarComponent implements OnInit {
 
   modalContent: TemplateRef<any>;
   title: string = "Calendar";
-  view: CalendarView = CalendarView.Day;
+  view: CalendarView = CalendarView.Month;
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   currentEvent: Events = new Events();

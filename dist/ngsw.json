@@ -13,7 +13,7 @@
         "/assets/images/todo_list_icon.svg",
         "/favicon.ico",
         "/index.html",
-        "/main.749482fd4bb79a20ff18.js",
+        "/main.233ec928488ee7cc9902.js",
         "/polyfills.20ab2d163684112c2aba.js",
         "/runtime.ec2944dd8b20ec099bf3.js",
         "/styles.c55248d3125ed89f0407.css"
@@ -52,8 +52,8 @@
     "/assets/images/pencil_icon.svg": "ad4dca69d42313239d41184c9ffe40506ee46b67",
     "/assets/images/todo_list_icon.svg": "43d9577d79e76c329e14a4c732a81ed0153ce3dd",
     "/favicon.ico": "2519202ab11d2d9542e3200665552c4d4bd874f0",
-    "/index.html": "c89f68cf938ffb3c47129ad45a984daace753058",
-    "/main.749482fd4bb79a20ff18.js": "60d4e0153e4fe9e4ff53a87a5f1da3955a5c6eba",
+    "/index.html": "3d91888dd8583327033a543e4df71ddc235cda7d",
+    "/main.233ec928488ee7cc9902.js": "406df0ccde3a640d906a96bd9acbdc7acbe04a74",
     "/polyfills.20ab2d163684112c2aba.js": "ce68d153e9b9b6d26b625069c0ee99ae09c6f255",
     "/runtime.ec2944dd8b20ec099bf3.js": "b62956c2192bfe5516d6374e753773901ed50ec5",
     "/styles.c55248d3125ed89f0407.css": "d80816e48e84ca6f0a17ce9fd2950521d8d5b0fb"
