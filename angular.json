@@ -22,7 +22,8 @@
               "src/favicon.ico",
               "src/assets",
               "src/web.config",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/cloud-messaging-sw.js"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",

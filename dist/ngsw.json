@@ -11,12 +11,13 @@
         "/assets/images/loader.svg",
         "/assets/images/pencil_icon.svg",
         "/assets/images/todo_list_icon.svg",
+        "/cloud-messaging-sw.js",
         "/favicon.ico",
         "/index.html",
-        "/main.6279123a73a0b944d935.js",
-        "/polyfills.20ab2d163684112c2aba.js",
+        "/main.d7746ce7af80bb524df2.js",
+        "/polyfills.4c686a24ea7995742446.js",
         "/runtime.ec2944dd8b20ec099bf3.js",
-        "/styles.ddc7c2f80cf5e0c435f5.css"
+        "/styles.ced7e44d10ae11f25eb2.css"
       ],
       "patterns": []
     },
@@ -51,12 +52,13 @@
     "/assets/images/loader.svg": "0871743a430d8e961266c35f50656c938341a76f",
     "/assets/images/pencil_icon.svg": "ad4dca69d42313239d41184c9ffe40506ee46b67",
     "/assets/images/todo_list_icon.svg": "43d9577d79e76c329e14a4c732a81ed0153ce3dd",
+    "/cloud-messaging-sw.js": "672285803e04254f2435ecc170b5338a6dce4498",
     "/favicon.ico": "2519202ab11d2d9542e3200665552c4d4bd874f0",
-    "/index.html": "9632dce53dfaca75605e47fc52f59ba17e01b341",
-    "/main.6279123a73a0b944d935.js": "1053fdf6800ed76f2e9ee672306adbdc1df847d5",
-    "/polyfills.20ab2d163684112c2aba.js": "ce68d153e9b9b6d26b625069c0ee99ae09c6f255",
+    "/index.html": "d578f649df0618c3315225eae42a79bc70f69eb9",
+    "/main.d7746ce7af80bb524df2.js": "71b2b4b18d1e80f30a0534f421d8067bb572cb9f",
+    "/polyfills.4c686a24ea7995742446.js": "4ab98e11e44c4bc97507dfc711f8420a47d6f18e",
     "/runtime.ec2944dd8b20ec099bf3.js": "b62956c2192bfe5516d6374e753773901ed50ec5",
-    "/styles.ddc7c2f80cf5e0c435f5.css": "0e8088742c3461a193d12ad717b93c893d1d338d"
+    "/styles.ced7e44d10ae11f25eb2.css": "6c51f96fc173d9a252170772059046e9abc2268b"
   },
   "navigationUrls": [
     {
