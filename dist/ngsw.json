@@ -7,17 +7,18 @@
       "installMode": "prefetch",
       "updateMode": "prefetch",
       "urls": [
+        "/4.5aaacff4c3fac44762f8.js",
         "/assets/images/calendar_clock_icon.svg",
         "/assets/images/loader.svg",
         "/assets/images/pencil_icon.svg",
         "/assets/images/todo_list_icon.svg",
-        "/cloud-messaging-sw.js",
         "/favicon.ico",
+        "/firebase-messaging-sw.js",
         "/index.html",
-        "/main.d7746ce7af80bb524df2.js",
+        "/main.aed46bd4b8bf74fceef2.js",
         "/polyfills.4c686a24ea7995742446.js",
-        "/runtime.ec2944dd8b20ec099bf3.js",
-        "/styles.ced7e44d10ae11f25eb2.css"
+        "/runtime.fa189a0736818b7ac93d.js",
+        "/styles.75e6dc8391056adc3e3c.css"
       ],
       "patterns": []
     },
@@ -40,6 +41,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
+    "/4.5aaacff4c3fac44762f8.js": "337dfe246cd6d98662e186c72ead5ee2db22b094",
     "/assets/icons/icon-128x128.png": "b4d19cea4ac5ee406c94d114a6c292e5c23123e6",
     "/assets/icons/icon-144x144.png": "f14f267bba15fee52931c4a691ca0780e9b38805",
     "/assets/icons/icon-152x152.png": "de64689d7b8a36f7243802fe64463b0eed81b423",
@@ -52,13 +54,13 @@
     "/assets/images/loader.svg": "0871743a430d8e961266c35f50656c938341a76f",
     "/assets/images/pencil_icon.svg": "ad4dca69d42313239d41184c9ffe40506ee46b67",
     "/assets/images/todo_list_icon.svg": "43d9577d79e76c329e14a4c732a81ed0153ce3dd",
-    "/cloud-messaging-sw.js": "672285803e04254f2435ecc170b5338a6dce4498",
     "/favicon.ico": "2519202ab11d2d9542e3200665552c4d4bd874f0",
-    "/index.html": "d578f649df0618c3315225eae42a79bc70f69eb9",
-    "/main.d7746ce7af80bb524df2.js": "71b2b4b18d1e80f30a0534f421d8067bb572cb9f",
+    "/firebase-messaging-sw.js": "a459b62232f65c7e7335c86e80500f4e1499ec7d",
+    "/index.html": "01382926e1a660571655ff58bfe0c98a46676c37",
+    "/main.aed46bd4b8bf74fceef2.js": "d38e45cb34a5889a03dd128b6b4596cd287152f9",
     "/polyfills.4c686a24ea7995742446.js": "4ab98e11e44c4bc97507dfc711f8420a47d6f18e",
-    "/runtime.ec2944dd8b20ec099bf3.js": "b62956c2192bfe5516d6374e753773901ed50ec5",
-    "/styles.ced7e44d10ae11f25eb2.css": "6c51f96fc173d9a252170772059046e9abc2268b"
+    "/runtime.fa189a0736818b7ac93d.js": "d5edd3b4c6fb7bde7c433fa6af264b409fe63da7",
+    "/styles.75e6dc8391056adc3e3c.css": "7850ea8c198f4afd9032ba3fba5b5b2c9bf11541"
   },
   "navigationUrls": [
     {
