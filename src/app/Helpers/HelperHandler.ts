@@ -89,4 +89,8 @@ export class HelperHandler {
         bodyElement[0].style.setProperty("overflow", "hidden");
         }
     }
+
+    public static async Sleep(msec) {
+        return new Promise(resolve => setTimeout(resolve, msec));
+      }
 }

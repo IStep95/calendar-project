@@ -15,6 +15,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialo
 import { isPlatformBrowser } from '@angular/common';
 import { NgZone } from '@angular/core';
 
+import { MessagingService } from "../messaging.service";
 import { AuthenticationService } from '../authentication.service';
 import { EventsService } from '../events.service';
 import { Users } from '../Model/Users';
@@ -34,13 +35,14 @@ import {
   addHours
 } from 'date-fns';
 
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { CalendarEvent,
          CalendarEventAction,
          CalendarEventTimesChangedEvent,
          CalendarView } from '../angular-calendar/modules/common/calendar-common.module';
 import { Constants } from '../Constants';
 import { CalendarDayViewComponent } from '../angular-calendar';
+import { ConstantPool } from '@angular/compiler';
 //#endregion
 
 const colors: any = {
@@ -84,6 +86,10 @@ export class CalendarComponent implements OnInit {
   AddEditButton: string;
   calendarState:CalendarState;
   firstLoad: boolean = true;
+  notificationVisibility: string;
+  notificationHeight: string;
+  notificationIcon: string;
+
 
   modalData: {
     action: string;
@@ -108,6 +114,8 @@ export class CalendarComponent implements OnInit {
   activeDayIsOpen: boolean = true; 
   authUser: Users = null;
   isUserAuthenticated: boolean = !(localStorage[Constants.AUTHENTICATED_USER_KEY] === null);
+  message: BehaviorSubject<any>;
+  userToken: string = "";
 
   get ActiveDayIsOpen(): boolean {
     return this.activeDayIsOpen;
@@ -121,13 +129,13 @@ export class CalendarComponent implements OnInit {
   }
   //#endregion
 
-
   constructor(private authenticationService: AuthenticationService,
               private router: Router, private modal: NgbModal, 
               public dialog: MatDialog,
               @Inject(PLATFORM_ID) private platformId: Object,
+              private ngZone: NgZone,
               private eventsService: EventsService,
-              private ngZone: NgZone) {
+              private messagingService: MessagingService) {
               
               /* Check user authentication */
               if (!this.isUserAuthenticated) {
@@ -158,25 +166,53 @@ export class CalendarComponent implements OnInit {
       this.authUser = JSON.parse(localStorage[Constants.AUTHENTICATED_USER_KEY]);
       this.authenticationService.userAuthenticated(this.authUser);
     }
-    var retrievedObject = localStorage.getItem('Authenticated user');
+    var retrievedObject = localStorage.getItem(Constants.AUTHENTICATED_USER_KEY);
     if (retrievedObject != null) {
       this.authUser = JSON.parse(retrievedObject);
       HelperHandler.PrintUser(this.authUser);
       this.currentEvent.UserId = this.authUser.UserId;
       this.currentEvent.Email = this.authUser.Email;
 
+      /* Firebase request user notifications permission */
+      var pushNotificationsAllowed = localStorage.getItem(Constants.PUSH_NOTIFICATIONS_ALLOWED_KEY);
+      if (pushNotificationsAllowed === 'false') {
+        const userId = this.authUser.UserId;
+        this.messagingService.requestPermission(userId);
+        console.log(this.message);
+        localStorage.setItem(Constants.PUSH_NOTIFICATIONS_ALLOWED_KEY, 'true');
+      }
+
+      /* Firebase subscribe to message receive */
+      this.messagingService.receiveMessage();
+      this.message = this.messagingService.currentMessage;
+      this.subscribeToNotificationMessages();
+
       /* Get user events */
       this.fillCalendarWithUserEvents(this.authUser.UserId);
     }
     
     this.handleOnStartBackButton();
-
     this.initProperties();
 
   }
 
+  adminNotify() {
+    this.messagingService.sendMessage();
+  }
+
+  subscribeToNotificationMessages() {
+    this.message.subscribe((message) => { 
+      this.showNotifications();
+    });
+    HelperHandler.Sleep(Constants._5000MSEC).then(e => {
+      this.hideNotifications();
+    });
+  }
+
   initProperties() { 
     this.initialState();
+    this.hideNotifications();
+
     HelperHandler.EnableScrolling();
     window.onpopstate = function(event) {
       var startsAtActive = document.getElementById('startsAtId') === document.activeElement;
@@ -195,6 +231,7 @@ export class CalendarComponent implements OnInit {
 
   initialState() {
     this.setAddState();
+    this.notificationIcon = Constants.CALENDAR_ICON_IMAGE_PATH;
   }
 
   handleOnStartBackButton()
@@ -231,6 +268,24 @@ export class CalendarComponent implements OnInit {
   moveToEdit():void {
     var element = document.getElementById("edit");
     element.scrollIntoView();
+  }
+
+  showNotifications() {
+    this.userToken = localStorage.getItem(Constants.FIRE_BASE_TOKEN_KEY);
+    this.notificationVisibility = "visible";
+    this.notificationHeight = "100px";
+    if (this.message) {
+      if (this.message["notification"]) {
+        if (this.message["notification"]["icon"]){
+        this.notificationIcon = this.message["notification"]["icon"];
+        }
+      }
+    }
+  }
+
+  hideNotifications() {
+    this.notificationVisibility = "hidden";
+    this.notificationHeight = "0px";
   }
 
   getAuthUserData() {

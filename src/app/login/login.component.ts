@@ -73,6 +73,7 @@ export class LoginComponent implements OnInit {
                           HelperHandler.PrintUser(this.currentUser);
                           this.loginService.userAuthenticated(this.currentUser);
                           localStorage.setItem(Constants.AUTHENTICATED_USER_KEY, JSON.stringify(this.currentUser));
+                          localStorage.setItem(Constants.PUSH_NOTIFICATIONS_ALLOWED_KEY, 'false');
 
                           // Wait one second for better UX
                           this.sleep(Constants._1000MSEC).then(e => {
