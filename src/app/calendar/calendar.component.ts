@@ -178,7 +178,6 @@ export class CalendarComponent implements OnInit {
       if (pushNotificationsAllowed === 'false') {
         const userId = this.authUser.UserId;
         this.messagingService.requestPermission(userId);
-        console.log(this.message);
         localStorage.setItem(Constants.PUSH_NOTIFICATIONS_ALLOWED_KEY, 'true');
       }
 
@@ -188,7 +187,8 @@ export class CalendarComponent implements OnInit {
       this.subscribeToNotificationMessages();
 
       /* Get user events */
-      this.fillCalendarWithUserEvents(this.authUser.UserId);
+      if (this.events.length == 0)
+        this.fillCalendarWithUserEvents(this.authUser.UserId);
     }
     
     this.handleOnStartBackButton();

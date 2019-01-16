@@ -4,6 +4,10 @@ export class Constants {
  
     public static API_ENDPOINT_EVENT: string = "https://calendarpwaapi.azurewebsites.net/api/events";
 
+    //public static API_ENDPOINT_USER: string = "https://localhost:5001/api/users";
+
+    //public static API_ENDPOINT_EVENT: string = "https://localhost:5001/api/events"
+
     public static MIN_PASSWORD_LENGTH: number = 8;
 
     public static LOADER_ICON_IMAGE_PATH: string = "../assets/images/loader.svg";

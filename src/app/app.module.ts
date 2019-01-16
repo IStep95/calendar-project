@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { CalendarComponent, SimplePopUpDialog } from './calendar/calendar.component';
 import { SevereErrorHandler } from './severe-error-handler'
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { MessagingService } from './messaging.service';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
@@ -51,6 +52,7 @@ import { AngularFireModule } from '@angular/fire';
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
+    DeviceDetectorModule.forRoot(),
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled:  environment.production }),
     AngularFireDatabaseModule,
     AngularFireAuthModule,

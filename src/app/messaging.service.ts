@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Constants } from './Constants';
 import { StringHandler } from './Helpers/StringHandler';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 
 var server_key = Constants.FIRE_BASE_SERVER_KEY;
@@ -28,7 +28,7 @@ export class MessagingService {
     private angularFireAuth: AngularFireAuth,
     private angularFireMessaging: AngularFireMessaging,
     private http: HttpClient,
-    private ngZone: NgZone) { 
+    private deviceService: DeviceDetectorService) { 
 
     this.angularFireMessaging.messaging.subscribe(
       (_messaging) => {
@@ -52,8 +52,44 @@ export class MessagingService {
         if (token === null) {
           token = localStorage.getItem(Constants.FIRE_BASE_TOKEN_KEY);
         }
-        const data = { [userId]: token };
-        this.angularFireDB.object('fcmTokens/').update(data);
+        
+        //var tokenKey = "Browser: " + this.deviceService.browser + " Mobile: " + this.deviceService.isMobile();
+        //const tokenDBRow = {[tokenKey]: token };
+
+        const tokenDBRow = token;
+        // Get all tokens for specific user //
+        let data = this.angularFireDB.list('/fcmTokens/' + userId).valueChanges();
+        var tokenExist :boolean = false;
+        var index = 0;
+        var tokensLength = 0;
+        data.subscribe((tokens)=>{
+          
+          // Check if token is already assigned
+          tokens.forEach(element => {
+            var tokenString = JSON.stringify(Object.assign(element)).replace(/"/g,"");
+
+            if (tokenString === token) {
+              tokenExist = true;
+              //you can not break out of foreach in javascript
+              //and should not in this case because of index
+            }
+            index++;
+            tokensLength = tokens.length;
+          });
+
+        });
+
+        if (!tokenExist) {
+
+          let tokenDBRow;
+          if (tokensLength == 0) {
+            tokenDBRow = {[0]: token }
+          } else {
+            tokenDBRow = {[index + 1]: token }
+          }
+
+          this.angularFireDB.object('/fcmTokens/' + userId).update(tokenDBRow);
+        }
       });
   }
 
