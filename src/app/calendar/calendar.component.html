@@ -16,7 +16,6 @@
     <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
   </div>
 </ng-template>
-<button class="btn btn-secondary" (click)=adminNotify()>Salji notife</button>
 <div class="topPadding">
   <div class="container">
     <div class="row">
@@ -84,7 +83,6 @@
               </div>
             </div>
             <br class="break-view-calendar" />
-            <p>User token: {{ userToken }}</p>
             <div [ngSwitch]="view" class="center">
                 <div [style.visibility]="notificationVisibility"
                      [style.height]="notificationHeight">
@@ -164,7 +162,9 @@
                 </td>
               </tr>
             </table>
+            <button class="btn btn-secondary pull-right" (click)=adminNotify()>Notifications send!</button>
         </div>
     </div>
   </div>
+  
 </div>

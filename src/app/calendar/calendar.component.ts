@@ -193,7 +193,6 @@ export class CalendarComponent implements OnInit {
     
     this.handleOnStartBackButton();
     this.initProperties();
-
   }
 
   adminNotify() {
@@ -503,6 +502,7 @@ export class CalendarComponent implements OnInit {
         .subscribe(
           (data : Events[]) => {
 
+            this.events = [];
             for (let element of data)
             {
               var startsAtUTC = new Date(element['startsAt']);
