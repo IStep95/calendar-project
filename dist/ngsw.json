@@ -15,7 +15,7 @@
         "/favicon.ico",
         "/firebase-messaging-sw.js",
         "/index.html",
-        "/main.c2742633ed31f3859674.js",
+        "/main.83e1c530e6f269a7703f.js",
         "/polyfills.4c686a24ea7995742446.js",
         "/runtime.fa189a0736818b7ac93d.js",
         "/styles.75e6dc8391056adc3e3c.css"
@@ -56,8 +56,8 @@
     "/assets/images/todo_list_icon.svg": "43d9577d79e76c329e14a4c732a81ed0153ce3dd",
     "/favicon.ico": "2519202ab11d2d9542e3200665552c4d4bd874f0",
     "/firebase-messaging-sw.js": "a459b62232f65c7e7335c86e80500f4e1499ec7d",
-    "/index.html": "fe53e7d5873ba09d927ccd18041933ff9576ba92",
-    "/main.c2742633ed31f3859674.js": "d8f9a1d849afc259f7ea5bfb1ebeb35132a7dedb",
+    "/index.html": "eab411a27afabe37f705a108ee5167c8bfbc3c25",
+    "/main.83e1c530e6f269a7703f.js": "7dfafa41d680c01679fa2a78c144c0bec1dcba74",
     "/polyfills.4c686a24ea7995742446.js": "4ab98e11e44c4bc97507dfc711f8420a47d6f18e",
     "/runtime.fa189a0736818b7ac93d.js": "d5edd3b4c6fb7bde7c433fa6af264b409fe63da7",
     "/styles.75e6dc8391056adc3e3c.css": "7850ea8c198f4afd9032ba3fba5b5b2c9bf11541"
