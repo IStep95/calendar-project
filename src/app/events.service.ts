@@ -27,19 +27,9 @@ export class EventsService {
     var tmpObservable: Observable<Events>;
     var returnEvent: Events = new Events();
     tmpObservable = this.http.post<Events>(url, newEvent, httpOptions);
-    tmpObservable.subscribe((data: Events) =>
-    {
-      returnEvent.EventId = data['eventId'];
-      returnEvent.Title = data['title'];
-      returnEvent.Email = data['email'];
-      returnEvent.StartsAt = new Date(data['startsAt']);
-      returnEvent.EndsAt = new Date(data['endsAt']);
-
-      //returnEvent.StartsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.StartsAt.toUTCString());
-      //returnEvent.EndsAt = HelperHandler.GetLocalDateTimeFromUTC(returnEvent.EndsAt.toUTCString());
-      returnEvent.UserId = data['userId'];
-      //HelperHandler.PrintEvent(returnEvent);
-    })
+    
+   
+    console.log("Poziv create");
     return tmpObservable;
   }
 

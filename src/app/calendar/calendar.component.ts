@@ -388,6 +388,7 @@ export class CalendarComponent implements OnInit {
           .subscribe(
             (data: Events) => {
                 this.currentEvent = HelperHandler.MapDataToEvents(data);
+                
                 var successMessage: string = "Event successfuly added."
                 
                 const dialogRef = this.dialog.open(SimplePopUpDialog, {

@@ -9,5 +9,6 @@ export class Users {
     LastName: string;
     DateOfBirth: Date;
     SessionId: string;
+    TimeOffset: number;
     EventsDTO: Events[];
 }

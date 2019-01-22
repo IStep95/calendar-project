@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       this.LoginFailedMessage = "Entered email is not valid.";
       return;
     }
-
+    
     this.loginService.loginUser(this.currentUser)
                      .subscribe(
                       (data: Users) => {
@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
                         this.currentUser.DateOfBirth = data['dateOfBirth'];
                         this.currentUser.Email = data['email'];
                         this.currentUser.SessionId = data['sessionId'];
-
+                      
                       },
                       err => {
                         this.emailOrPasswordIncorrect = true;

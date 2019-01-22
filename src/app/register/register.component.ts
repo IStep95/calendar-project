@@ -37,6 +37,8 @@ export class RegisterComponent implements OnInit {
 
     if (!this.correctInputForm()) return;
     
+
+    this.currentUser.TimeOffset = new Date().getTimezoneOffset();
     this.registrationService
         .registerUser(this.currentUser)
         .subscribe(
