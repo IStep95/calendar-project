@@ -15,7 +15,7 @@
         "/favicon.ico",
         "/firebase-messaging-sw.js",
         "/index.html",
-        "/main.8a40b2a5f28de5e424a4.js",
+        "/main.f4202e31e64a3e6c2b8e.js",
         "/polyfills.4c686a24ea7995742446.js",
         "/runtime.fa189a0736818b7ac93d.js",
         "/styles.75e6dc8391056adc3e3c.css"
@@ -55,9 +55,9 @@
     "/assets/images/pencil_icon.svg": "ad4dca69d42313239d41184c9ffe40506ee46b67",
     "/assets/images/todo_list_icon.svg": "43d9577d79e76c329e14a4c732a81ed0153ce3dd",
     "/favicon.ico": "2519202ab11d2d9542e3200665552c4d4bd874f0",
-    "/firebase-messaging-sw.js": "a459b62232f65c7e7335c86e80500f4e1499ec7d",
-    "/index.html": "dfe2e064a8bd630c613d3de3883f8707b24ecea1",
-    "/main.8a40b2a5f28de5e424a4.js": "7d90e1f8f1026aa12372b8707ef6123ca49dbc27",
+    "/firebase-messaging-sw.js": "b21b1ba9552c4391b248f3bf53fe05ce781e3e89",
+    "/index.html": "3c9b03afd14c034329c23d9b5311a92af1c13495",
+    "/main.f4202e31e64a3e6c2b8e.js": "4689935b306e105f183383264af28a781f35a4a8",
     "/polyfills.4c686a24ea7995742446.js": "4ab98e11e44c4bc97507dfc711f8420a47d6f18e",
     "/runtime.fa189a0736818b7ac93d.js": "d5edd3b4c6fb7bde7c433fa6af264b409fe63da7",
     "/styles.75e6dc8391056adc3e3c.css": "7850ea8c198f4afd9032ba3fba5b5b2c9bf11541"
