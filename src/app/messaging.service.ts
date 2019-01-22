@@ -53,10 +53,6 @@ export class MessagingService {
           token = localStorage.getItem(Constants.FIRE_BASE_TOKEN_KEY);
         }
         
-        //var tokenKey = "Browser: " + this.deviceService.browser + " Mobile: " + this.deviceService.isMobile();
-        //const tokenDBRow = {[tokenKey]: token };
-
-        const tokenDBRow = token;
         // Get all tokens for specific user //
         let data = this.angularFireDB.list('/fcmTokens/' + userId).valueChanges();
         var tokenExist :boolean = false;
@@ -77,19 +73,20 @@ export class MessagingService {
             tokensLength = tokens.length;
           });
 
-        });
+          if (!tokenExist) {
 
-        if (!tokenExist) {
-
-          let tokenDBRow;
-          if (tokensLength == 0) {
-            tokenDBRow = {[0]: token }
-          } else {
-            tokenDBRow = {[index + 1]: token }
+            let tokenDBRow;
+            if (tokensLength == 0) {
+              tokenDBRow = {[0]: token }
+            } else {
+              tokenDBRow = {[index]: token }
+            }
+  
+            this.angularFireDB.object('/fcmTokens/' + userId).update(tokenDBRow);
+            tokenExist = true;
           }
-
-          this.angularFireDB.object('/fcmTokens/' + userId).update(tokenDBRow);
-        }
+        });
+        
       });
   }
 
