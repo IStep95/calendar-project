@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
       return;
     }
     
+    this.currentUser.TimeOffset = new Date().getTimezoneOffset();
     this.loginService.loginUser(this.currentUser)
                      .subscribe(
                       (data: Users) => {
@@ -52,7 +53,7 @@ export class LoginComponent implements OnInit {
                         this.currentUser.DateOfBirth = data['dateOfBirth'];
                         this.currentUser.Email = data['email'];
                         this.currentUser.SessionId = data['sessionId'];
-                      
+                        this.currentUser.TimeOffset = data['timeOffset'];
                       },
                       err => {
                         this.emailOrPasswordIncorrect = true;
