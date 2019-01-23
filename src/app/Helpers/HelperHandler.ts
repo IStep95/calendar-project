@@ -13,6 +13,7 @@ export class HelperHandler {
         console.log("last name: " + user.LastName);
         console.log("date of birth: " + user.DateOfBirth);
         console.log("session id: " + user.SessionId);
+        console.log("time zone offset: " + user.TimeOffset);
     }
 
     public static GetLocalDateTimeFromUTC(value: Date): Date {
